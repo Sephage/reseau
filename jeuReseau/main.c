@@ -93,7 +93,10 @@ int main(int argc, char *argv[])
 
 
 /*********************************************************/
-/**********Initialisation des cases de la carte***********/
+/******** Initialisation des cases de la carte ***********/
+/***** Ici il faudra mettre tout ça dans un dossier ******/
+/*En même temps il faudra le mettre dans un autre fichier*/
+/******** où il y aura des fonctions sur la carte ********/
 /*********************************************************/
 
 void init_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR])
@@ -109,6 +112,7 @@ void init_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR])
         }
 
 /********** Initialisation des cases autres que VIDE ***********/
+        /* Les cases où Monstres apparaissent sont pour le moment inutilisée, aucun monstre n'est programmé, mais le sprite existe */
 
         carte[0][0] = PERSONNAGE;
         carte[13][0] = MONSTRE;
@@ -185,7 +189,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *pos
 
     int i, j;
 
-    /* Chargement des images et gestion de la transparence*
+    /* Chargement des images et gestion de la transparence
      * Pour le moment aucun monstre n'est chargé, c'est pour cela qu'il et grisé, voir pour le mettre dans une
      * autre focntion
      * */
@@ -219,19 +223,11 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *pos
             {
                 position.x = i * TAILLE_BLOC;
                 position.y = j * TAILLE_BLOC;
+                /*Toutes les cases sont de l'herbe*/
 
                 SDL_BlitSurface(herbe, NULL, screen, &position);
-            }
-        }
-
-
-        for(i=0;i<NB_BLOCS_LARGEUR; i++)
-        {
-            for(j=0;j<NB_BLOCS_HAUTEUR; j++)
-            {
-                position.x = i * TAILLE_BLOC;
-                position.y = j * TAILLE_BLOC;
-
+            
+                /* Suivant s'il y à unobjet de jeu ou pas on l'affiche */
                 switch(carte[i][j])
                 {
                     case CLEF:
@@ -312,13 +308,12 @@ void afficher_monstre(SDL_Rect *positionMonstre, SDL_Surface *screen, SDL_Surfac
 
 /**********************************************************************************/
 /******************************* Boucle principal : *******************************/
-/*********** initialisation de toutes les images, appel des fonctions : ***********/
+/*********** Initialisation de toutes les images, appel des fonctions : ***********/
 /******************* de déplacement et de gestion de collisions *******************/
 /**********************************************************************************/
 
 void jouer(SDL_Surface *screen, int vieClefOr[3])
 {
-
 
     SDL_Surface *personnage[4] = {NULL, NULL, NULL, NULL};
     SDL_Surface *personnageActuel = NULL;
