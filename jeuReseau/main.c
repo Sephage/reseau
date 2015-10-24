@@ -30,8 +30,9 @@ int main(int argc, char *argv[])
     positionMenu.x = 0;
     positionMenu.y = 0;
 
+    /* L'image du menu est chargé ici, il faudra faire une aute fonction */
     imageMenu = SDL_LoadBMP("sprites/menu_deux.bmp");
-    /* La variable continuer se met ŕ 0 lorsque :
+    /* La variable continuer se met a 0 lorsque :
      * Le joueur gagne
      * Le joueur perd
      * Le joueur quitte la partie
@@ -40,26 +41,31 @@ int main(int argc, char *argv[])
     while(continuer)
     {
         SDL_WaitEvent(&event);
-
+        /* Ici on récupère quel est le type d'évènement */
         switch(event.type)
         {
             case SDL_QUIT:
                 continuer = 0;
                 break;
+                /*Ici on récupère la touche sur laquelle le joueur tape (quand il l'enfonce)*/
             case SDL_KEYDOWN:
+                /*event.key... est la variable où c'est stocké*/
             switch(event.key.keysym.sym)
             {
                 case SDLK_ESCAPE:
                     continuer = 0;
                     break;
                 case SDLK_KP1:
+                case SDLK_a:
                     jouer(screen, vieClefOr);
-                    continuer = 0;
+                   //continuer = 0;
                     break;
                 case SDLK_KP2:
+                case SDLK_z:
                     aide(screen);
                     break;
                 case SDLK_KP3:
+                case SDLK_e:
                     continuer = 0;
                     break;
                 default:
@@ -179,7 +185,10 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *pos
 
     int i, j;
 
-    /**Chargement des images et gestion de la transparence**/
+    /* Chargement des images et gestion de la transparence*
+     * Pour le moment aucun monstre n'est chargé, c'est pour cela qu'il et grisé, voir pour le mettre dans une
+     * autre focntion
+     * */
     herbe = SDL_LoadBMP("sprites/herbe.bmp");
     clef = SDL_LoadBMP("sprites/clef.bmp");
     piege = SDL_LoadBMP("sprites/piege.bmp");
@@ -356,7 +365,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
 
     SDL_EnableKeyRepeat(100, 100);
 
-
+    /*Gestion du déplacement, PdV et autres états du jeu */
     while(continuer && vieClefOr[0] != 0 && vieClefOr[2] < 10)
     {
         SDL_WaitEvent(&event);
@@ -396,7 +405,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
         }
         /**********************************************************/
 
-
+/*
         for(i=0;i<NB_BLOCS_LARGEUR; i++)
         {
             for(j=0; j<NB_BLOCS_HAUTEUR; j++)
@@ -411,6 +420,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
                    }
             }
         }
+        */
         afficher_carte(carte,&positionJoueur ,screen, personnageActuel, vieClefOr, monstreActuel);
         /**********************************************************/
 
@@ -582,7 +592,7 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect
         /**/break;
 
         case BAS: /**y+1**/
-            if(position->y + 1 > 14)
+            if(position->y + 1 > NB_BLOCS_HAUTEUR-1)
             {
                 /**On arręte ici si la case suivante sort du tableau**/
             }
@@ -636,7 +646,7 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect
             break;
 
         case DROITE:/**x+1**/
-            if(position->x+1 > 19)
+            if(position->x+1 > NB_BLOCS_LARGEUR-1)
             {
                 /**On arręte ici si la case suivante sort du tableau**/
             }
