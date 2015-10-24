@@ -4,8 +4,9 @@
 
 #include "constantes.h"
 #include "niveau.h"
+#include "main.h"
 
-void jouer(SDL_Surface *screen)
+void jouer(SDL_Surface *screen, int vieClefOr[3])
 {
     SDL_Surface *personnage[4] = {NULL}, *monstre[4] = {NULL};
     SDL_Surface *piege = NULL, *coffre = NULL, *personnageActuel = NULL;
