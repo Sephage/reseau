@@ -123,7 +123,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *pos
     coffre = SDL_LoadBMP("sprites/coffre.bmp");
     pieceOr = SDL_LoadBMP("sprites/or.bmp");
     /*monstreActuel = SDL_LoadBMP("sprites/Slim_violet_face.bmp");*/
-    rocher = SDL_LoadBMP("sprites/rocher.bmp");
+    rocher = SDL_LoadBMP("sprites/Ice.bmp");
 
 
     SDL_SetColorKey(clef, SDL_SRCCOLORKEY, SDL_MapRGB(clef->format, 255, 255, 255));
@@ -249,10 +249,10 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
     int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR] = {0};
 
 
-    personnage[BAS] = SDL_LoadBMP("sprites/Singe_face.bmp");
-    personnage[HAUT] = SDL_LoadBMP("sprites/Singe_dos.bmp");
-    personnage[DROITE] = SDL_LoadBMP("sprites/Singe_droite.bmp");
-    personnage[GAUCHE] = SDL_LoadBMP("sprites/Singe_gauche.bmp");
+    personnage[BAS] = SDL_LoadBMP("sprites/BomberFront.bmp");
+    personnage[HAUT] = SDL_LoadBMP("sprites/BomberBack.bmp");
+    personnage[DROITE] = SDL_LoadBMP("sprites/BomberRight.bmp");
+    personnage[GAUCHE] = SDL_LoadBMP("sprites/BomberLeft.bmp");
 
 
     SDL_SetColorKey(personnage[BAS], SDL_SRCCOLORKEY, SDL_MapRGB(personnage[BAS]->format, 255, 255, 255));
