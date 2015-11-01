@@ -26,13 +26,13 @@ int main(int argc, char *argv[])
     int vieClefOr[3] = {10,0,0};
 
     SDL_WM_SetCaption("Jeu version 1.0", NULL);
-    screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF| SDL_FULLSCREEN);
 
     positionMenu.x = 0;
     positionMenu.y = 0;
 
     /* L'image du menu est chargé ici, il faudra faire une aute fonction */
-    imageMenu = SDL_LoadBMP("sprites/menu_deux.bmp");
+    imageMenu = SDL_LoadBMP("sprites/menu.bmp");
     /* La variable continuer se met a 0 lorsque :
      * Le joueur gagne
      * Le joueur perd
@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
                 case SDLK_KP1:
                 case SDLK_a:
                     jouer(screen, vieClefOr);
+                    afficher_ecran_de_fin(screen, vieClefOr);
+                    pause();
                     //continuer = 0;
                     break;
                 case SDLK_KP2:
@@ -94,150 +96,13 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *positionJoueur, SDL_Surface *screen, SDL_Surface *personnageActuel, int vieClefOr[3], SDL_Surface *monstreActuel)
-{
-    SDL_Surface *piege = NULL, *coffre = NULL;
-    SDL_Surface /**monstreActuel = NULL,*/ *clef = NULL, *pieceOr = NULL;
-    SDL_Surface *rocher = NULL, *herbe = NULL;
-
-    SDL_Surface *texteVie = NULL, *texteOr = NULL, *texteClef = NULL;
-    SDL_Rect position;
-    TTF_Font *police = NULL;
-    SDL_Color couleurVerte = {0,250,0};
-
-    char tabVie[15] = "";
-    char tabOr[15] = "";
-    char tabClef[15] = "";
-
-    police = TTF_OpenFont("police/impact.ttf", 20);
-
-    int i, j;
-
-    /* Chargement des images et gestion de la transparence
-     * Pour le moment aucun monstre n'est chargé, c'est pour cela qu'il et grisé, voir pour le mettre dans une
-     * autre focntion
-     * */
-    herbe = SDL_LoadBMP("sprites/herbe.bmp");
-    clef = SDL_LoadBMP("sprites/clef.bmp");
-    piege = SDL_LoadBMP("sprites/piege.bmp");
-    coffre = SDL_LoadBMP("sprites/coffre.bmp");
-    pieceOr = SDL_LoadBMP("sprites/or.bmp");
-    /*monstreActuel = SDL_LoadBMP("sprites/Slim_violet_face.bmp");*/
-    rocher = SDL_LoadBMP("sprites/Ice.bmp");
-
-
-    SDL_SetColorKey(clef, SDL_SRCCOLORKEY, SDL_MapRGB(clef->format, 255, 255, 255));
-    SDL_SetColorKey(piege, SDL_SRCCOLORKEY, SDL_MapRGB(piege->format, 255, 255, 255));
-    SDL_SetColorKey(coffre, SDL_SRCCOLORKEY, SDL_MapRGB(coffre->format, 255, 255, 255));
-    /*SDL_SetColorKey(monstreActuel, SDL_SRCCOLORKEY, SDL_MapRGB(monstreActuel->format, 255, 255, 255));*/
-    SDL_SetColorKey(pieceOr, SDL_SRCCOLORKEY, SDL_MapRGB(pieceOr->format, 255, 255, 255));
-    SDL_SetColorKey(rocher, SDL_SRCCOLORKEY, SDL_MapRGB(rocher->format, 255, 255, 255));
-
-
-
-
-        /**Efface l'écran puis réaffiche les blocs réactualisé**/
-    /** C'est cette fonction qui réactualise l'écran, il faut en faire une fonction */
-
-        SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format, 0,0,0));
-
-        for(i=0;i<NB_BLOCS_LARGEUR; i++)
-        {
-            for(j=0;j<NB_BLOCS_HAUTEUR; j++)
-            {
-                position.x = i * TAILLE_BLOC;
-                position.y = j * TAILLE_BLOC;
-                /*Toutes les cases sont de l'herbe*/
-
-                SDL_BlitSurface(herbe, NULL, screen, &position);
-            
-                /* Suivant s'il y à unobjet de jeu ou pas on l'affiche */
-                switch(carte[i][j])
-                {
-                    case CLEF:
-                        SDL_BlitSurface(clef, NULL, screen, &position);
-                        break;
-                    case MONSTRE:
-                        SDL_BlitSurface(monstreActuel, NULL, screen, &position);
-                        break;
-                    case COFFRE:
-                        SDL_BlitSurface(coffre, NULL, screen, &position);
-                        break;
-                    case PIEGE:
-                        SDL_BlitSurface(piege, NULL, screen, &position);
-                        break;
-                    case OR:
-                        SDL_BlitSurface(pieceOr, NULL, screen, &position);
-                        break;
-                    case ROCHER:
-                        SDL_BlitSurface(rocher, NULL, screen, &position);
-                        break;
-                }
-            }
-        }
-                /** Gestion du texte de vie, clef et or du joueur **/
-
-        sprintf(tabVie,"Vie : %d", vieClefOr[0]);
-        texteVie = TTF_RenderText_Solid(police, tabVie, couleurVerte);
-        sprintf(tabClef,"Clef : %d", vieClefOr[1]);
-        texteClef = TTF_RenderText_Solid(police, tabClef, couleurVerte);
-        sprintf(tabOr, "Or : %d", vieClefOr[2]);
-        texteOr = TTF_RenderText_Solid(police, tabOr, couleurVerte);
-
-        position.x = 1000;
-        position.y = 0;
-        SDL_BlitSurface(texteVie, NULL, screen, &position);
-        position.y = 40;
-        SDL_BlitSurface(texteClef, NULL, screen, &position);
-        position.y = 80;
-        SDL_BlitSurface(texteOr, NULL, screen, &position);
-
-    position.x = positionJoueur->x * TAILLE_BLOC;
-    position.y = positionJoueur->y * TAILLE_BLOC;
-    SDL_BlitSurface(personnageActuel, NULL, screen, &position);
-    SDL_Flip(screen);
-
-
-
-    /**Libération des surfaces**/
-    SDL_FreeSurface(piege);
-    SDL_FreeSurface(coffre);
-    SDL_FreeSurface(monstreActuel);
-    SDL_FreeSurface(clef);
-    SDL_FreeSurface(pieceOr);
-    SDL_FreeSurface(rocher);
-    SDL_FreeSurface(texteVie);
-    SDL_FreeSurface(texteClef);
-    SDL_FreeSurface(texteOr);
-    SDL_FreeSurface(herbe);
-
-    TTF_CloseFont(police);
-}
-
-
-
-void afficher_monstre(SDL_Rect *positionMonstre, SDL_Surface *screen, SDL_Surface *monstreActuel)
-{
-    SDL_Rect position;
-
-    position.x = positionMonstre->x * TAILLE_BLOC;
-    position.y = positionMonstre->y * TAILLE_BLOC;
-
-    SDL_BlitSurface(monstreActuel, NULL, screen, &position);
-    SDL_Flip(screen);
-}
-
-
-
-
 /**********************************************************************************/
 /******************************* Boucle principal : *******************************/
 /*********** Initialisation de toutes les images, appel des fonctions : ***********/
 /******************* de déplacement et de gestion de collisions *******************/
 /**********************************************************************************/
 
-void jouer(SDL_Surface *screen, int vieClefOr[3])
-{
+void jouer(SDL_Surface *screen, int vieClefOr[3]){
 
     SDL_Surface *personnage[4] = {NULL, NULL, NULL, NULL};
     SDL_Surface *personnageActuel = NULL;
@@ -245,7 +110,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
     SDL_Rect positionJoueur, positionMonstre;
 
     SDL_Event event;
-    int continuer = 1,i,j;
+    int continuer = 1,i,j, nbTour = 0;
     int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR] = {0};
 
 
@@ -263,10 +128,9 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
 
     /*******************************************************************/
 
-    personnageActuel = personnage[BAS]; //Personnage de départ et celui de face
+    personnageActuel = personnage[HAUT]; //Personnage de départ et celui de face
 
-   if(initCarte(carte,"map/niveau2.map") != -1)
-       printf("Reussi\n");
+    initCarte(carte,"map/niveau3.map") ;
 
     /**Initialisation de la position du joueur pour la premičre fois**/
 
@@ -280,6 +144,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
                 positionJoueur.y = j;
                 carte[i][j] = VIDE;
             }
+           
         }
     }
 
@@ -300,7 +165,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
                     case SDLK_ESCAPE:
                         continuer = 0;
                         break;
-                   case SDLK_UP: //touche du haut
+                    case SDLK_UP: //touche du haut
                         personnageActuel = personnage[HAUT];
                         deplacer_personnage(carte, &positionJoueur, HAUT, vieClefOr);
                         break;
@@ -316,13 +181,15 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
                         personnageActuel = personnage[GAUCHE];
                         deplacer_personnage(carte, &positionJoueur, GAUCHE, vieClefOr);
                         break;
+                    case SDLK_a: //On pose une bombe
+                        carte[positionJoueur.x][positionJoueur.y] = BOMBE;
+                        break;
                     default:
                         break;
                 }
                 break;
-            default:
-                break;
         }
+
         /**********************************************************/
 
 /*
@@ -341,10 +208,32 @@ void jouer(SDL_Surface *screen, int vieClefOr[3])
             }
         }
         */
+        /*Algorithme qui fait exploser les bombes tous les 5 tours*/
+            for(i=0;i<NB_BLOCS_LARGEUR;i++){
+                for(j=0; j<NB_BLOCS_HAUTEUR;j++){
+                    
+                    if(carte[i][j] > BOMBE_EXPL && carte[i][j] <= BOMBE)
+                        carte[i][j] --;
+                    if(carte[i][j] == BOMBE_EXPL){
+                        carte[i][j] = EXPLOSION;
+                        if((carte[i][j+1] == ROCHER || carte[i][j+1] == VIDE) && j+1 < NB_BLOCS_HAUTEUR){
+                            carte[i][j+1] = EXPLOSION_HAUT;
+                        }
+                        if((carte[i][j-1] == ROCHER || carte[i][j-1] == VIDE) && j-1 >= 0){
+                            carte[i][j-1] = EXPLOSION_BAS;
+                        }
+                        if((carte[i+1][j] == ROCHER || carte[i+1][j] == VIDE) && i+1 < NB_BLOCS_LARGEUR){
+                            carte[i+1][j] = EXPLOSION_DROITE;
+                        }
+                        if((carte[i-1][j] == ROCHER || carte[i-1][j] == VIDE) && i-1 >= 0){
+                            carte[i-1][j] = EXPLOSION_GAUCHE;
+                        }
+                    }
+                    
+                }
+            }
+            
         afficher_carte(carte,&positionJoueur ,screen, personnageActuel, vieClefOr, monstreActuel);
-        /**********************************************************/
-
-
     }
 
 
@@ -444,290 +333,6 @@ void deplacer_monstre(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *p
 }
 
 
-/**********************************************************************/
-/********** Boucle de déplacement de personnage, change la ************/
-/************ positionJoueur, et gestion des collisions ***************/
-/**********************************************************************/
-
-void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *position, int direction, int vieClefOr[3])
-{
-    switch(direction) /**y-1*/
-    {
-      /**/case HAUT:
-            if(position->y - 1 < 0)
-            {
-                /**On arręte ici si la case suivante sort du tableau**/
-            }
-            else
-            {
-                if(carte[position->x][position->y-1] == VIDE)
-                {
-                    position->y--;
-                }
-                else
-                {
-                    if(carte[position->x][position->y-1] == ROCHER)
-                    {
-                        /**Arręt si la case suivante est un rocher**/
-                    }
-                    else if(carte[position->x][position->y-1] == CLEF)
-                    {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x][position->y-1] = VIDE;
-                        position->y--;
-                    }
-                    else if(carte[position->x][position->y-1] == OR)
-                    {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x][position->y-1] = VIDE;
-                        position->y--;
-                    }
-
-                    else if(carte[position->x][position->y-1] == PIEGE || carte[position->x][position->y-1] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x][position->y-1] = VIDE;
-                        position->y--;
-                    }
-
-                    else if(carte[position->x][position->y - 1] == COFFRE)
-                    {
-                        if(vieClefOr[1] > 0)
-                        {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x][position->y-1] = VIDE;
-                            position->y--;
-                        }
-
-                        else
-                        {
-                            /**On arręte si on n'a pas de clef pour ouvrir le coffre**/
-                        }
-                    }
-                }
-            }
-
-        /**/break;
-
-        case BAS: /**y+1**/
-            if(position->y + 1 > NB_BLOCS_HAUTEUR-1)
-            {
-                /**On arręte ici si la case suivante sort du tableau**/
-            }
-            else
-            {
-                if(carte[position->x][position->y+1] == VIDE)
-                {
-                    position->y++;
-                }
-                else
-                {
-                   if(carte[position->x][position->y+1] == ROCHER)
-                    {
-                        /**Arręt si la case suivante est un rocher**/
-                    }
-                    else if(carte[position->x][position->y+1] == CLEF)
-                    {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x][position->y+1] = VIDE;
-                        position->y++;
-                    }
-                    else if(carte[position->x][position->y+1] == OR)
-                    {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x][position->y+1] = VIDE;
-                        position->y++;
-                    }
-                    else if(carte[position->x][position->y+1] == PIEGE || carte[position->x][position->y+1] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x][position->y+1] = VIDE;
-                        position->y++;
-                    }
-                    else if(carte[position->x][position->y + 1] == COFFRE)
-                    {
-                        if(vieClefOr[1] > 0)
-                        {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x][position->y+1] = VIDE;
-                            position->y++;
-                        }
-                        else
-                        {
-                            /**On arręte si on n'a pas de clef pour ouvrir le coffre**/
-                        }
-                    }
-                }
-
-            }
-            break;
-
-        case DROITE:/**x+1**/
-            if(position->x+1 > NB_BLOCS_LARGEUR-1)
-            {
-                /**On arręte ici si la case suivante sort du tableau**/
-            }
-            else
-            {
-                if(carte[position->x+1][position->y] == VIDE)
-                {
-                    position->x++;
-                }
-                else
-                {
-                    if(carte[position->x+1][position->y] == ROCHER)
-                    {
-                        /**Arręt si la case suivante est un rocher**/
-                    }
-                    else if(carte[position->x+1][position->y] == CLEF)
-                    {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x+1][position->y] = VIDE;
-                        position->x++;
-                    }
-                    else if(carte[position->x+1][position->y] == OR)
-                    {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x+1][position->y] = VIDE;
-                        position->x++;
-                    }
-
-                    else if(carte[position->x+1][position->y] == PIEGE || carte[position->x+1][position->y] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x+1][position->y] = VIDE;
-                        position->x++;
-                    }
-
-                    else if(carte[position->x+1][position->y] == COFFRE)
-                    {
-                        if(vieClefOr[1] > 0)
-                        {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x+1][position->y] = VIDE;
-                            position->x++;
-                    }
-
-                        else
-                        {
-                            /**On arręte si on n'a pas de clef pour ouvrir le coffre**/
-                        }
-                    }
-                }
-            }
-
-            break;
-
-        case GAUCHE:/**x-1**/
-            if(position->x - 1 < 0)
-            {
-                /**On arręte ici si la case suivante sort du tableau**/
-            }
-            else
-            {
-                if(carte[position->x-1][position->y] == VIDE)
-                {
-                    position->x--;
-                }
-                else
-                {
-                    if(carte[position->x-1][position->y] == ROCHER)
-                    {
-                        /**Arręt si la case suivante est un rocher**/
-                    }
-                    else if(carte[position->x-1][position->y] == CLEF)
-                    {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x-1][position->y] = VIDE;
-                        position->x--;
-                    }
-                    else if(carte[position->x-1][position->y] == OR)
-                    {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x-1][position->y] = VIDE;
-                        position->x--;
-                    }
-
-                    else if(carte[position->x-1][position->y] == PIEGE || carte[position->x-1][position->y] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x-1][position->y] = VIDE;
-                        position->x--;
-                    }
-
-                    else if(carte[position->x-1][position->y] == COFFRE)
-                    {
-                        if(vieClefOr[1] > 0)
-                        {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x-1][position->y] = VIDE;
-                            position->x--;
-                        }
-
-                        else
-                        {
-                            /**On arręte si on n'a pas de clef pour ouvrir le coffre**/
-                        }
-                    }
-                }
-            }
-
-            break;
-    }
-
-}
-
-/*****************************************************************************/
-/******************* Affiche l'écran de fin suivant les cas ******************/
-/*****************************************************************************/
-
-void afficher_ecran_de_fin(SDL_Surface *screen, int vieClefOr[3])
-{
-    SDL_Surface *texte;
-    TTF_Font *police;
-    SDL_Color couleurVerte = {0,200,0};
-    SDL_Color couleurNoire = {0,0,0};
-    SDL_Rect position;
-
-    police = TTF_OpenFont("police/pala.ttf", 65);  //Chargement de la police
-
-    position.y = 375-35;
-
-
-    SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format, 0,0,0));
-
-    if(vieClefOr[0] ==  0)  //SI la vie descend a 0
-    {
-        texte = TTF_RenderText_Shaded(police,"Vous avez perdu !!", couleurVerte, couleurNoire);
-        position.x = 280;
-
-    }
-    else if(vieClefOr[2] >= 10) //Si le joueur ŕ plus de 10 pičces d'or
-    {
-        texte = TTF_RenderText_Shaded(police, "Vous avez gagné !!", couleurVerte, couleurNoire);
-        position.x = 270;
-    }
-    else    //Si le joueur décide de quitter avant la fin
-    {
-        texte = TTF_RenderText_Shaded(police,"Au revoir !!", couleurVerte, couleurNoire);
-        position.x = 365;
-    }
-        SDL_BlitSurface(texte, NULL, screen, &position);
-        SDL_Flip(screen);
-        pause();
-        /**Libération des pointeurs**/
-    TTF_CloseFont(police);
-    SDL_FreeSurface(texte);
-}
-
-
-
-
-
 /****************************************************************************/
 /**********************Fonction qui met le jeu en pause**********************/
 /************************dans la fonction ecran_de_fin***********************/
@@ -784,4 +389,3 @@ void aide(SDL_Surface *screen)
 
     SDL_FreeSurface(aide);
 }
-
