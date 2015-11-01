@@ -14,10 +14,10 @@ Pour le code en lui-même
 
 Pour le jeu :
 
-    Il faut débugguer ce menu afin qu'il nous laisse utiliser le jeu !! Pour le moment appuyez sur 1,2,3 du keypad ou a,z,e du clavier
-    Mettre le jeu en réseau, et donc relier l'écran de fin au menu principal (Ca devrait être fait, mais corruption de mémoire fait bug, a voir)[DONE]
+    Il faut aussi mettre le jeu en multijoueur (et les bombes ne sont pour le moment que visuelle.
+
     CHANGER CET ECRAN POUR LES MENUS CAR CA TROU LES YEUX (ie : gros talents de designer)
-    Changer les sprites pour faire un monde plus cohérents (surtout le personnage)
+    Changer les sprites pour faire un monde plus cohérents (surtout le personnage) En mettre un deuxième pour le personnage.
     Création d'une action hostile (un joueur X frappe un joueur Y grace à une bombe poséé au bon endroit par exemple :D)
-    Création d'un possibilité que le joueur pose des objets sans les activés
+    Création d'un possibilité que le joueur pose des objets sans les activer
     Création de plusieurs mode de jeux ? (au moins un en coop ?)
