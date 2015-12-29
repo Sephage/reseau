@@ -1,6 +1,6 @@
 /******************************************************************************************************/
 /**                                    Jeu :                                                         **/
-/**                            - Par Paul VALENTIN et bientôt reprise pas 4 autres personnes :D      **/
+/**                            - Par Paul VALENTIN      **/
 /**                            - Version : Alpha 1.0                                                 **/
 /**                            - sans IA                                                             **/
 /**                            - Modif : 21/12/2013                                                  **/

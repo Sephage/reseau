@@ -28,10 +28,10 @@ typedef struct in_addr IN_ADDR;
 #endif
 
 #define CRLF		"\r\n"
-#define PORT	 	1977
-#define MAX_CLIENTS 	100
+#define PORT	 	31337
+#define MAX_CLIENTS 	2 /*We have one match max*/
 
-#define BUF_SIZE	1024
+#define BUF_SIZE	10
 
 #include "client.h"
 
@@ -42,7 +42,7 @@ static int init_connection(void);
 static void end_connection(int sock);
 static int read_client(SOCKET sock, SOCKADDR_IN *csin, char *buffer);
 static void write_client(SOCKET sock, SOCKADDR_IN *csin, const char *buffer);
-static void send_message_to_all_clients(int sock, Client *clients, Client *client, int actual, const char *buffer, char from_server);
+static void send_map(int sock, Client *clients, Client *client, int actual, const char *buffer, char from_server);
 static void remove_client(Client *clients, int to_remove, int *actual);
 static int check_if_client_exists(Client *clients, SOCKADDR_IN *csin, int actual);
 static Client* get_client(Client *clients, SOCKADDR_IN *csin, int actual);
