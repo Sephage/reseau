@@ -6,6 +6,7 @@
 #include "main.h"
 #include "constantes.h"
 #include "niveau.h"
+#include "joueur.h"
 
 
 /**Fonction main : Affichage de l'aide, appel des fonctions, initialisation des tableau **/

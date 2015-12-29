@@ -1,209 +1,110 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+#include <sys/types.h>
 #include <string.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <netinet.h>
+#include <unistd.h>
 
-#include "server.h"
-#include "client.h"
 
-static void init(void)
-{
-#ifdef WIN32
-		WSADATA wsa;
-		int err = WSAStartup(MAKEWORD(2, 2), &wsa);
-		if(err < 0)
-		{
-				puts("WSAStartup failed !");
-				exit(EXIT_FAILURE);
-		}
-#endif
-}
+int main(){
+		int s_ecoute, s_dial, cli_len;
+		int option = 1;
+		struct sockaddr_in serv_addr, cli_addr;
 
-static void end(void)
-{
-#ifdef WIN32
-		WSACleanup();
-#endif
-}
+		char buf[2];
+		int bufferMap[20][20];
+		int i;
 
-static void app(void)
-{
-		SOCKET sock = init_connection();
-		char buffer[BUF_SIZE];
-		/* the index for the array */
-		int actualClient = 0;
-		int max = sock;
-		/* an array for all clients */
-		Client clients[MAX_CLIENTS];
+		int so_reuseaddr = 1;
 
-		fd_set rdfs;
+		int actualNumberClient = 0;
+		int nb_client_aff = 0;
+		int descmax = 0;
+		int client[FD_SETSIZE];
 
-		while(1)
-		{
-				FD_ZERO(&rdfs);
+		struct timeval compte_rebours;
 
-				/* add STDIN_FILENO */
-				FD_SET(STDIN_FILENO, &rdfs);
+		compte_rebours.tv_usec = 0;
+		compte_rebours.tv_sec = 600;
+		/*********/
+		/*********/
 
-				/* add the connection socket */
-				FD_SET(sock, &rdfs);
+		serv_addr.sin_family = AF_INET;
+		ser_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+		serv_addr.sin_port = htons(31337);
+		memset(&serv_addr.sin_zero, 0, sizeof(serv_addr.sin_zero));
 
-				if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1){
-						perror("select()");
-						exit(errno);
+		s_ecoute = socket(PF_INET, SOCK_STREAM, 0);
+		setsockopt(s_ecoute, SOL_SOCKET, SO_REUSEADDR, &so_reuseaddr, sizeof so_reuseaddr);
+
+		bind(s_ecoute, (struct sockaddr *)&serv_addr, sizeof serv_addr);
+		listen(s_ecoute, 5);
+
+		/*Premiere boucle afin de récupérer le bon nombre de joueur*/
+		while(actualNumberClient < 2){
+				FD_ZERO(&readfds);
+				FD_SET(s_ecoute, &readfds);
+				descmax = s_ecoute;
+				for(i=0;i<actualNumberClient,i++){
+						FD_SET(client[i], &readfds);
+				}
+				if(s_dial > descmax){
+						descmax = s_dial:
 				}
 
-				/* something from standard input : i.e keyboard */
-				if(FD_ISSET(STDIN_FILENO, &rdfs)){
-						/* stop process when type on keyboard */
-						break;
-				}
-				else if(FD_ISSET(sock, &rdfs)){
-						/* new client */
-						SOCKADDR_IN csin = { 0 };
+					nb_client_aff = select(descmax + 1, &readfds, NULL, NULL, &compte_rebours);
 
-						/* a client is talking */
-						read_client(sock, &csin, buffer);
-						/*If client doesn't exist we can create it*/
-						if(!check_if_client_exists(clients, &csin, actualClient)){
-								if(actualClient != MAX_CLIENTS){
-										Client c = { csin };
-										strncpy(c.name, buffer, BUF_SIZE - 1);
-										clients[actualClient] = c;
-										actualClient++;
+					/*Lorsque nb_client_aff > 0, un des descripteur surveillé a reçu quelque chose*/
+					if(nb_client_aff){
+								if(FD_ISSET(s_ecoute, &readfds)){
+										cli_len = sizeof cli_addr;
+										s_dial = accept(s_ecoute, (struct sockaddr *)&cli_addr, 
+														(socklen_t *)&cli_len);
+										printf("Le client %s s'est connecte\n", inet_ntoa
+														(cli_addr.sin_addr),
+														ntohs(cli_addr.sin_port));
+										client[actualNumberClient] = s_dial;
+										actualNumberClient++;
 								}
-						}
-						/*If he exists, we have to send the map*/
-						else{
-								Client *client = get_client(clients, &csin, actualClient);
-								if(client == NULL) 
-										continue;
-								send_map(sock, clients, client, actualClient, buffer, 0);
-						}
+					}
+		}
+		/*Initialisation de la map et des joueurs
+		 * A completer */
+		initGame();
+		/*Tant que l'un des joueurs n'a pas gagné ou perdu...*/
+		while(continuer){
+			FD_ZERO(&readfds);
+				FD_SET(s_ecoute, &readfds);
+				descmax = s_ecoute;
+				for(i=0;i<actualNumberClient,i++){
+						FD_SET(client[i], &readfds);
 				}
-		}
-
-		end_connection(sock);
-}
-
-static int check_if_client_exists(Client *clients, SOCKADDR_IN *csin, int actualClient)
-{
-		int i = 0;
-		for(i = 0; i < actualClient; i++)
-		{
-				if(clients[i].sin.sin_addr.s_addr == csin->sin_addr.s_addr
-								&& clients[i].sin.sin_port == csin->sin_port)
-				{
-						return 1;
+				if(s_dial > descmax){
+						descmax = s_dial:
 				}
-		}
 
-		return 0;
-}
+					nb_client_aff = select(descmax + 1, &readfds, NULL, NULL, &compte_rebours);
 
-static Client* get_client(Client *clients, SOCKADDR_IN *csin, int actualClient)
-{
-		int i = 0;
-		for(i = 0; i < actualClient; i++)
-		{
-				if(clients[i].sin.sin_addr.s_addr == csin->sin_addr.s_addr
-								&& clients[i].sin.sin_port == csin->sin_port)
-				{
-						return &clients[i];
-				}
-		}
-
-		return NULL;
-}
-
-static void remove_client(Client *clients, int to_remove, int *actualClient)
-{
-		/* we remove the client in the array */
-		memmove(clients + to_remove, clients + to_remove + 1, (*actualClient - to_remove) * sizeof(Client));
-		/* number client - 1 */
-		(*actualClient)--;
-}
-
-static void send_map(int sock, Client *clients, Client *sender, int actualClient, const char *buffer, char from_server)
-{
-		int i = 0;
-		char message[BUF_SIZE];
-		message[0] = 0;
-		for(i = 0; i < actualClient; i++){
-				/* we don't send message to the sender */
-				if(sender != &clients[i]){
-						if(from_server == 0){
-								strncpy(message, sender->name, BUF_SIZE - 1);
-								strncat(message, " : ", sizeof message - strlen(message) - 1);
-						}
-						strncat(message, buffer, sizeof message - strlen(message) - 1);
-						write_client(sock, &clients[i].sin, message);
-				}
+					/*Lorsque nb_client_aff > 0, un des descripteur surveillé a reçu quelque chose*/
+					if(nb_client_aff){
+							/*Lecture des touches */
+							for(i = 0;i<actualNumberClient;i++){
+									if(FD_ISSET(client[i], &readfds)){
+											bzero(buf,2);
+											if(read(client[i], buf, 2) == -1){
+													perror("Erreur lors de la lecture de la socket\n");
+													return -1;
+											}
+											/*Traitement des touches que l'on recoit 
+											 * i=J1 ou J2 (prendre i+1) */
+											deplacer_personnage();
+									}
+							}
+					}
 		}
 }
 
-static int init_connection(void)
-{
-		/* UDP so SOCK_DGRAM */
-		SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
-		SOCKADDR_IN sin = { 0 };
-
-		if(sock == INVALID_SOCKET)
-		{
-				perror("socket()");
-				exit(errno);
 		}
-
-		sin.sin_addr.s_addr = htonl(INADDR_ANY);
-		sin.sin_port = htons(PORT);
-		sin.sin_family = AF_INET;
-
-		if(bind(sock,(SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR)
-		{
-				perror("bind()");
-				exit(errno);
-		}
-
-		return sock;
-}
-
-static void end_connection(int sock)
-{
-		closesocket(sock);
-}
-
-static int read_client(SOCKET sock, SOCKADDR_IN *sin, char *buffer)
-{
-		int n = 0;
-		size_t sinsize = sizeof *sin;
-
-		if((n = recvfrom(sock, buffer, BUF_SIZE - 1, 0, (SOCKADDR *) sin, &sinsize)) < 0)
-		{
-				perror("recvfrom()");
-				exit(errno);
-		}
-
-		buffer[n] = 0;
-
-		return n;
-}
-
-static void write_client(SOCKET sock, SOCKADDR_IN *sin, const char *buffer)
-{
-		if(sendto(sock, buffer, strlen(buffer), 0, (SOCKADDR *) sin, sizeof *sin) < 0)
-		{
-				perror("send()");
-				exit(errno);
-		}
-}
-
-int main(int argc, char **argv)
-{
-		init();
-
-		app();
-
-		end();
-
-		return EXIT_SUCCESS;
 }
