@@ -5,58 +5,57 @@
 #include "constantes.h"
 /**********************************************************************/
 /********** Boucle de déplacement de personnage, change la ************/
-/************ positionJoueur, et gestion des collisions ***************/
+/************ personnage->positionJoueur, et gestion des collisions ***************/
 /**********************************************************************/
 
-void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *position, int direction, int vieClefOr[3])
-{
+void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int direction, Character *personnage){
     switch(direction) /**y-1*/
     {
       /**/case HAUT:
-            if(position->y - 1 < 0)
+            if(personnage->personnage->position.y - 1 < 0)
             {
                 /**On arręte ici si la case suivante sort du tableau**/
             }
             else
             {
-                if(carte[position->x][position->y-1] == VIDE)
+                if(carte[personnage->position->x][personnage->position->y-1] == VIDE)
                 {
-                    position->y--;
+                    personnage->position->y--;
                 }
                 else
                 {
-                    if(carte[position->x][position->y-1] == ROCHER)
+                    if(carte[personnage->position->x][personnage->position->y-1] == ROCHER)
                     {
                         /**Arręt si la case suivante est un rocher**/
                     }
-                    else if(carte[position->x][position->y-1] == CLEF)
+                    else if(carte[personnage->position->x][personnage->position->y-1] == CLEF)
                     {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x][position->y-1] = VIDE;
-                        position->y--;
+                        personnage->key = personnage->key + 1;
+                        carte[personnage->position->x][personnage->position->y-1] = VIDE;
+                        personnage->position->y--;
                     }
-                    else if(carte[position->x][position->y-1] == OR)
+                    else if(carte[personnage->position->x][personnage->position->y-1] == OR)
                     {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x][position->y-1] = VIDE;
-                        position->y--;
-                    }
-
-                    else if(carte[position->x][position->y-1] == PIEGE || carte[position->x][position->y-1] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x][position->y-1] = VIDE;
-                        position->y--;
+                        personnage->gold = personnage->gold + 1;
+                        carte[personnage->position->x][personnage->position->y-1] = VIDE;
+                        personnage->position->y--;
                     }
 
-                    else if(carte[position->x][position->y - 1] == COFFRE)
+                    else if(carte[personnage->position->x][personnage->position->y-1] == PIEGE || carte[personnage->position->x][personnage->position->y-1] == MONSTRE)
                     {
-                        if(vieClefOr[1] > 0)
+                        personnage->life = personnage->life - 1;
+                        carte[personnage->position->x][personnage->position->y-1] = VIDE;
+                        personnage->position->y--;
+                    }
+
+                    else if(carte[personnage->position->x][personnage->position->y - 1] == COFFRE)
+                    {
+                        if(personnage->key > 0)
                         {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x][position->y-1] = VIDE;
-                            position->y--;
+                            personnage->key = personnage->key - 1;
+                            personnage->gold = personnage->gold + 2;
+                            carte[personnage->position->x][personnage->position->y-1] = VIDE;
+                            personnage->position->y--;
                         }
 
                         else
@@ -69,48 +68,48 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect
         break;
 
         case BAS: /**y+1**/
-            if(position->y + 1 > NB_BLOCS_HAUTEUR-1)
+            if(personnage->position->y + 1 > NB_BLOCS_HAUTEUR-1)
             {
                 /**On arręte ici si la case suivante sort du tableau**/
             }
             else
             {
-                if(carte[position->x][position->y+1] == VIDE)
+                if(carte[personnage->position->x][personnage->position->y+1] == VIDE)
                 {
-                    position->y++;
+                    personnage->position->y++;
                 }
                 else
                 {
-                   if(carte[position->x][position->y+1] == ROCHER)
+                   if(carte[personnage->position->x][personnage->position->y+1] == ROCHER)
                     {
                         /**Arręt si la case suivante est un rocher**/
                     }
-                    else if(carte[position->x][position->y+1] == CLEF)
+                    else if(carte[personnage->position->x][personnage->position->y+1] == CLEF)
                     {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x][position->y+1] = VIDE;
-                        position->y++;
+                        personnage->key = personnage->key + 1;
+                        carte[personnage->position->x][personnage->position->y+1] = VIDE;
+                        personnage->position->y++;
                     }
-                    else if(carte[position->x][position->y+1] == OR)
+                    else if(carte[personnage->position->x][personnage->position->y+1] == OR)
                     {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x][position->y+1] = VIDE;
-                        position->y++;
+                        personnage->gold =  personnage->gold + 1;
+                        carte[personnage->position->x][personnage->position->y+1] = VIDE;
+                        personnage->position->y++;
                     }
-                    else if(carte[position->x][position->y+1] == PIEGE || carte[position->x][position->y+1] == MONSTRE)
+                    else if(carte[personnage->position->x][personnage->position->y+1] == PIEGE || carte[personnage->position->x][personnage->position->y+1] == MONSTRE)
                     {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x][position->y+1] = VIDE;
-                        position->y++;
+                        personnage->life = personnage->life - 1;
+                        carte[personnage->position->x][personnage->position->y+1] = VIDE;
+                        personnage->position->y++;
                     }
-                    else if(carte[position->x][position->y + 1] == COFFRE)
+                    else if(carte[personnage->position->x][personnage->position->y + 1] == COFFRE)
                     {
-                        if(vieClefOr[1] > 0)
+                        if(personnage->key > 0)
                         {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x][position->y+1] = VIDE;
-                            position->y++;
+                            personnage->key = personnage->key - 1;
+                            personnage->gold = personnage->gold + 2;
+                            carte[personnage->position->x][personnage->position->y+1] = VIDE;
+                            personnage->position->y++;
                         }
                         else
                         {
@@ -123,50 +122,50 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect
             break;
 
         case DROITE:/**x+1**/
-            if(position->x+1 > NB_BLOCS_LARGEUR-1)
+            if(personnage->position->x+1 > NB_BLOCS_LARGEUR-1)
             {
                 /**On arręte ici si la case suivante sort du tableau**/
             }
             else
             {
-                if(carte[position->x+1][position->y] == VIDE)
+                if(carte[personnage->position->x+1][personnage->position->y] == VIDE)
                 {
-                    position->x++;
+                    personnage->position->x++;
                 }
                 else
                 {
-                    if(carte[position->x+1][position->y] == ROCHER)
+                    if(carte[personnage->position->x+1][personnage->position->y] == ROCHER)
                     {
                         /**Arręt si la case suivante est un rocher**/
                     }
-                    else if(carte[position->x+1][position->y] == CLEF)
+                    else if(carte[personnage->position->x+1][personnage->position->y] == CLEF)
                     {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x+1][position->y] = VIDE;
-                        position->x++;
+                        personnage->key++;
+                        carte[personnage->position->x+1][personnage->position->y] = VIDE;
+                        personnage->position->x++;
                     }
-                    else if(carte[position->x+1][position->y] == OR)
+                    else if(carte[personnage->position->x+1][personnage->position->y] == OR)
                     {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x+1][position->y] = VIDE;
-                        position->x++;
-                    }
-
-                    else if(carte[position->x+1][position->y] == PIEGE || carte[position->x+1][position->y] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x+1][position->y] = VIDE;
-                        position->x++;
+                        personnage->gold++;
+                        carte[personnage->position->x+1][personnage->position->y] = VIDE;
+                        personnage->position->x++;
                     }
 
-                    else if(carte[position->x+1][position->y] == COFFRE)
+                    else if(carte[personnage->position->x+1][personnage->position->y] == PIEGE || carte[personnage->position->x+1][personnage->position->y] == MONSTRE)
                     {
-                        if(vieClefOr[1] > 0)
+                        personnage->life--;
+                        carte[personnage->position->x+1][personnage->position->y] = VIDE;
+                        personnage->position->x++;
+                    }
+
+                    else if(carte[personnage->position->x+1][personnage->position->y] == COFFRE)
+                    {
+                        if(personnage->key > 0)
                         {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x+1][position->y] = VIDE;
-                            position->x++;
+                            personnage->key--;
+                            personnage->key++;
+                            carte[personnage->position->x+1][personnage->position->y] = VIDE;
+                            personnage->position->x++;
                     }
 
                         else
@@ -180,50 +179,50 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect
             break;
 
         case GAUCHE:/**x-1**/
-            if(position->x - 1 < 0)
+            if(personnage->position->x - 1 < 0)
             {
                 /**On arręte ici si la case suivante sort du tableau**/
             }
             else
             {
-                if(carte[position->x-1][position->y] == VIDE)
+                if(carte[personnage->position->x-1][personnage->position->y] == VIDE)
                 {
-                    position->x--;
+                    personnage->position->x--;
                 }
                 else
                 {
-                    if(carte[position->x-1][position->y] == ROCHER)
+                    if(carte[personnage->position->x-1][personnage->position->y] == ROCHER)
                     {
                         /**Arręt si la case suivante est un rocher**/
                     }
-                    else if(carte[position->x-1][position->y] == CLEF)
+                    else if(carte[personnage->position->x-1][personnage->position->y] == CLEF)
                     {
-                        vieClefOr[1] = vieClefOr[1] + 1;
-                        carte[position->x-1][position->y] = VIDE;
-                        position->x--;
+                        personnage->key++;
+                        carte[personnage->position->x-1][personnage->position->y] = VIDE;
+                        personnage->position->x--;
                     }
-                    else if(carte[position->x-1][position->y] == OR)
+                    else if(carte[personnage->position->x-1][personnage->position->y] == OR)
                     {
-                        vieClefOr[2] = vieClefOr[2] + 1;
-                        carte[position->x-1][position->y] = VIDE;
-                        position->x--;
-                    }
-
-                    else if(carte[position->x-1][position->y] == PIEGE || carte[position->x-1][position->y] == MONSTRE)
-                    {
-                        vieClefOr[0] = vieClefOr[0] - 1;
-                        carte[position->x-1][position->y] = VIDE;
-                        position->x--;
+                        personnage->gold++;
+                        carte[personnage->position->x-1][personnage->position->y] = VIDE;
+                        personnage->position->x--;
                     }
 
-                    else if(carte[position->x-1][position->y] == COFFRE)
+                    else if(carte[personnage->position->x-1][personnage->position->y] == PIEGE || carte[personnage->position->x-1][personnage->position->y] == MONSTRE)
                     {
-                        if(vieClefOr[1] > 0)
+                        personnage->life--;
+                        carte[personnage->position->x-1][personnage->position->y] = VIDE;
+                        personnage->position->x--;
+                    }
+
+                    else if(carte[personnage->position->x-1][personnage->position->y] == COFFRE)
+                    {
+                        if(personnage->key > 0)
                         {
-                            vieClefOr[1] = vieClefOr[1] - 1;
-                            vieClefOr[2] = vieClefOr[2] + 2;
-                            carte[position->x-1][position->y] = VIDE;
-                            position->x--;
+                            personnage->key--;
+							personnage->gold++;
+                            carte[personnage->position->x-1][personnage->position->y] = VIDE;
+                            personnage->position->x--;
                         }
 
                         else
@@ -236,7 +235,7 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect
 
             break;
         /*case RESTER:
-            if(carte[position->x][position->y] > 8){
+            if(carte[personnage->position->x][personnage->position->y] > 8){
                 vieClefOr[0]--;
             }
             break;*/
