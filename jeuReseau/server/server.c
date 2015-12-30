@@ -12,10 +12,15 @@ int main(){
 		int s_ecoute, s_dial, cli_len;
 		int option = 1;
 		struct sockaddr_in serv_addr, cli_addr;
-
-		char buf[2];
-		int bufferMap[20][20];
+		/*buf contient le déplacement (compris entre 0 et 3)
+		 * map contient la map (qu'il faudra renvoyer à chaque changement
+		 * character contiendra les états des deux personnages, 0 sera le premier arrivé
+		 */
+		int buf[1];
+		int map[20][20];
 		int i;
+
+		Character character[2];
 
 		int so_reuseaddr = 1;
 
@@ -72,7 +77,7 @@ int main(){
 		}
 		/*Initialisation de la map et des joueurs
 		 * A completer */
-		initGame();
+		initGame(character, map);
 		/*Tant que l'un des joueurs n'a pas gagné ou perdu...*/
 		while(continuer){
 			FD_ZERO(&readfds);
@@ -93,16 +98,21 @@ int main(){
 							for(i = 0;i<actualNumberClient;i++){
 									if(FD_ISSET(client[i], &readfds)){
 											bzero(buf,2);
-											if(read(client[i], buf, 2) == -1){
-													perror("Erreur lors de la lecture de la socket\n");
+											if(read(client[i], buf, 1) == -1){
+												perror("Erreur lors de la lecture de la socket\n");
 													return -1;
 											}
 											/*Traitement des touches que l'on recoit 
 											 * i=J1 ou J2 (prendre i+1) */
-											deplacer_personnage();
+											deplacer_personnage(map, buf, character[i]);
 									}
 							}
 					}
+					/*Il faut renvoyer les données de la map, les données des deux joueurs
+					 * (life/key/gold/position
+					 * aux deux joueurs
+					 * Ou renvoyer une indication de fin de jeu si l'un des personnages
+					 * a gagné et mettre continuer à 0 */
 		}
 }
 
