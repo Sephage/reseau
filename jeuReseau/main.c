@@ -148,7 +148,8 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
            
         }
     }
-
+	
+	/*CLIENT*/
     SDL_EnableKeyRepeat(100, 100);
 
     /*Gestion du déplacement, PdV et autres états du jeu */
@@ -166,6 +167,12 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
                     case SDLK_ESCAPE:
                         continuer = 0;
                         break;
+						/* Ici la gestion des déplacements (CLIENT) 
+						 * personnageActuel = character.actualCharacter
+						 * deplacer_personnage prend en param :
+						 * Un tableau de Character 
+						 * (peut-être échanger avec un mineChar et EnnemyChar)
+						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché
                     case SDLK_UP: //touche du haut
                         personnageActuel = personnage[HAUT];
                         deplacer_personnage(carte, &positionJoueur, HAUT, vieClefOr);

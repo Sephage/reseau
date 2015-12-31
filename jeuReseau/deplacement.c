@@ -14,7 +14,7 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int dire
       /**/case HAUT:
             if(personnage->personnage->position.y - 1 < 0)
             {
-                /**On arręte ici si la case suivante sort du tableau**/
+                /**On arrete ici si la case suivante sort du tableau**/
             }
             else
             {
@@ -227,7 +227,7 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int dire
 
                         else
                         {
-                            /**On arręte si on n'a pas de clef pour ouvrir le coffre**/
+                            /**On arrete si on n'a pas de clef pour ouvrir le coffre**/
                         }
                     }
                 }

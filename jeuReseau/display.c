@@ -5,7 +5,7 @@
 
 #include "constantes.h"
 
-void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *positionJoueur, SDL_Surface *screen, SDL_Surface *personnageActuel, int vieClefOr[3], SDL_Surface *monstreActuel)
+void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *screen, SDL_Surface *monstreActuel, Character character[2])
 {
     SDL_Surface *piege = NULL, *coffre = NULL;
     SDL_Surface /**monstreActuel = NULL,*/ *clef = NULL, *pieceOr = NULL;
@@ -115,7 +115,8 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *pos
                         break;
                 }
 
-                /*Remise des cases où une bombe à explosée en VIDE */
+                /*Remise des cases où une bombe à explosée en VIDE
+				 * A mettre dans le serveur*/
                 if(carte[i][j] <= 18 && carte[i][j] > 8){
                     SDL_BlitSurface(bombe,NULL,screen, &position);
                 }
@@ -141,10 +142,11 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *pos
         SDL_BlitSurface(texteClef, NULL, screen, &position);
         position.y = 80;
         SDL_BlitSurface(texteOr, NULL, screen, &position);
-
-    position.x = positionJoueur->x * TAILLE_BLOC;
-    position.y = positionJoueur->y * TAILLE_BLOC;
-    SDL_BlitSurface(personnageActuel, NULL, screen, &position);
+	for( i=0;i<2;i++){
+			position.x = character[i].position->x * TAILLE_BLOC;
+			position.y = character[i].position->y * TAILLE_BLOC;
+			SDL_BlitSurface(character[i].actualCharacter, NULL, screen, &position);
+	}
     SDL_Flip(screen);
 
     /**Libération des surfaces**/
