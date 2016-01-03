@@ -5,19 +5,19 @@ void error(char *msg) {
     exit(0);
 }
 
-void connexionToServer(Client client) {
+void connexionToServer(Client* client) {
 
-  client.sockfd = socket(PF_INET, SOCK_STREAM, 0);
-  if(client.sockfd < 0) {
+  client->sockfd = socket(PF_INET, SOCK_STREAM, 0);
+  if(client->sockfd < 0) {
     error("ERROR opening socket");
   }
 
-  client.serverAddr.sin_family = AF_INET;
-  client.serverAddr.sin_addr.s_addr = inet_addr(IP_SERVER);
-  client.serverAddr.sin_port = htons(PORT);
-  memset(&client.serverAddr.sin_zero, 0, sizeof(client.serverAddr.sin_zero));
+  client->serverAddr.sin_family = AF_INET;
+  client->serverAddr.sin_addr.s_addr = inet_addr(IP_SERVER);
+  client->serverAddr.sin_port = htons(PORT);
+  memset(&client->serverAddr.sin_zero, 0, sizeof(client->serverAddr.sin_zero));
 
-  if(connect(client.sockfd, (struct sockaddr*)&client.serverAddr, sizeof(client.serverAddr)) < 0) {
+  if(connect(client->sockfd, (struct sockaddr*)&client->serverAddr, sizeof(client->serverAddr)) < 0) {
     error("ERROR connecting to server");
   }
 }
@@ -50,6 +50,6 @@ char* receiveFromServer(Client client) {
   return msg;
 }
 
-void deconnexionFromServer(Client client) {
-  close(client.sockfd);
+void deconnexionFromServer(Client* client) {
+  close(client->sockfd);
 }

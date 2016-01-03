@@ -7,6 +7,7 @@
 #include "constantes.h"
 #include "niveau.h"
 #include "joueur.h"
+#include "client.h"
 
 
 /**Fonction main : Affichage de l'aide, appel des fonctions, initialisation des tableau **/
@@ -105,6 +106,20 @@ int main(int argc, char *argv[])
 
 void jouer(SDL_Surface *screen, int vieClefOr[3]){
 
+  Client client;
+  char* info = malloc(BUFF_SIZE_RECV*sizeof(char));
+
+  connexionToServer(&client);
+
+  /* Mettre un message disant "Attente d'un autre joueur" */
+
+  info = receiveFromServer(client);
+
+  /* info => carte et position des joueurs sous le format
+    M:<Map>J1:<posJ1>J2:<posJ2>
+    Il faut maintenant afficher la carte en fonction de ces données */
+
+
     SDL_Surface *personnage[4] = {NULL, NULL, NULL, NULL};
     SDL_Surface *personnageActuel = NULL;
     SDL_Surface *monstreActuel = NULL;
@@ -145,10 +160,10 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
                 positionJoueur.y = j;
                 carte[i][j] = VIDE;
             }
-           
+
         }
     }
-	
+
 	/*CLIENT*/
     SDL_EnableKeyRepeat(100, 100);
 
@@ -167,10 +182,10 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
                     case SDLK_ESCAPE:
                         continuer = 0;
                         break;
-						/* Ici la gestion des déplacements (CLIENT) 
+						/* Ici la gestion des déplacements (CLIENT)
 						 * personnageActuel = character.actualCharacter
 						 * deplacer_personnage prend en param :
-						 * Un tableau de Character 
+						 * Un tableau de Character
 						 * (peut-être échanger avec un mineChar et EnnemyChar)
 						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché
                     case SDLK_UP: //touche du haut
@@ -219,7 +234,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
         /*Algorithme qui fait exploser les bombes tous les 5 tours*/
             for(i=0;i<NB_BLOCS_LARGEUR;i++){
                 for(j=0; j<NB_BLOCS_HAUTEUR;j++){
-                    
+
                     if(carte[i][j] > BOMBE_EXPL && carte[i][j] <= BOMBE)
                         carte[i][j] --;
                     if(carte[i][j] == BOMBE_EXPL){
@@ -237,10 +252,10 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
                             carte[i-1][j] = EXPLOSION_GAUCHE;
                         }
                     }
-                    
+
                 }
             }
-            
+
         afficher_carte(carte,&positionJoueur ,screen, personnageActuel, vieClefOr, monstreActuel);
     }
 
@@ -252,6 +267,7 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
         SDL_FreeSurface(personnage[i]);
     }
 
+  client = deconnexionFromServer(&client);
 }
 
 void deplacer_monstre(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *positionMonstre, SDL_Rect *positionJoueur, int vieClefOr[3], SDL_Surface *monstreActuel)

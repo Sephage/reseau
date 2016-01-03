@@ -21,7 +21,7 @@ typedef struct {
   int sockfd;
 }Client;
 
-void connexionToServer(Client client);
+void connexionToServer(Client* client);
 void sendToServer(Client client);
 char* receiveFromServer(Client client);
-void deconnexionFromServer(Client client);
+void deconnexionFromServer(Client* client);
