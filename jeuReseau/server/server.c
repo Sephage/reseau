@@ -125,7 +125,7 @@ int main(){
 							/*Lecture des touches */
 							for(i = 0;i<actualNumberClient;i++){
 									if(FD_ISSET(client[i], &readfds)){
-											bzero(buf,2);
+											bzero(buf,1);
 											if(read(client[i], buf, 1) == -1){
 												perror("Erreur lors de la lecture de la socket\n");
 													return -1;
@@ -133,10 +133,8 @@ int main(){
 											/*Traitement des touches que l'on recoit 
 											 * i=J1 ou J2 (prendre i+1) */
 											deplacer_personnage(map, buf[0], character[i]);
-											for(j=0;j<2;j++){
 												if(character[i]->life == 0 || character[i]->gold == 10)
 													continuer = 0;
-											}
 									}
 							}
 					}
