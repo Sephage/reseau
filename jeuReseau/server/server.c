@@ -74,7 +74,7 @@ int main(){
 					if(nb_client_aff){
 								if(FD_ISSET(s_ecoute, &readfds)){
 										cli_len = sizeof cli_addr;
-										s_dial = accept(s_ecoute, (struct sockaddr *)&cli_addr, 
+										s_dial = accept(s_ecoute, (struct sockaddr *)&cli_addr,
 														(socklen_t *)&cli_len);
 										printf("Le client %s s'est connecte\n", inet_ntoa
 														(cli_addr.sin_addr),
@@ -107,7 +107,7 @@ int main(){
 		bufMapJoueur[307] = character[1]->gold;
 		bufMapJoueur[308] = character[1]->position->x;
 		bufMapJoueur[309] = character[1]->position->y;
-		
+
 		printf("Envoi des données en cours\n");
 		for(i=0;i<2;i++){
 			write(client[i],bufMapJoueur,310*sizeof(int));
@@ -139,11 +139,79 @@ int main(){
 												perror("Erreur lors de la lecture de la socket\n");
 													return -1;
 											}
-											/*Traitement des touches que l'on recoit 
+											/*Traitement des touches que l'on recoit
 											 * i=J1 ou J2 (prendre i+1) */
-											deplacer_personnage(map, buf[0], character[i]);
-												if(character[i]->life == 0 || character[i]->gold == 10)
+											if(buf[0] == 5) {
+
+												bufMapJoueur[0] = 30;
+												bufMapJoueur[1] = 35;
+												bufMapJoueur[3] = 0;
+
+												write(client[i],bufMapJoueur,310*sizeof(int));
+
+												bufMapJoueur[0] = 35;
+												bufMapJoueur[1] = 30;
+												bufMapJoueur[3] = 1;
+
+
+												for(j=0;j<2;j++){
+													if(j != i) {
+														write(client[j],bufMapJoueur,310*sizeof(int));
+													}
+												}
+												continuer = 0;
+											}
+											else {
+												deplacer_personnage(map, buf[0], character[i]);
+												if(character[i]->life == 0 || character[i]->gold == 10) {
+
+													bufMapJoueur[0] = 30;
+													bufMapJoueur[1] = 35;
+													bufMapJoueur[3] = 0;
+
+													write(client[i],bufMapJoueur,310*sizeof(int));
+
+													bufMapJoueur[0] = 35;
+													bufMapJoueur[1] = 30;
+													bufMapJoueur[3] = 1;
+
+
+													for(j=0;j<2;j++){
+														if(j != i) {
+															write(client[j],bufMapJoueur,310*sizeof(int));
+														}
+													}
 													continuer = 0;
+												}
+												else {
+													k = 0;
+													while(k < 300) {
+														for(i=0;i<NB_BLOCS_LARGEUR;i++){
+															for(j=0;j<NB_BLOCS_HAUTEUR;j++){
+																bufMapJoueur[k] = map[i][j];
+																k++;
+															}
+														}
+													}
+													bufMapJoueur[300] = character[0]->life;
+													bufMapJoueur[301] = character[0]->key;
+													bufMapJoueur[302] = character[0]->gold;
+													bufMapJoueur[303] = character[0]->position->x;
+													bufMapJoueur[304] = character[0]->position->x;
+
+													bufMapJoueur[305] = character[1]->life;
+													bufMapJoueur[306] = character[1]->key;
+													bufMapJoueur[307] = character[1]->gold;
+													bufMapJoueur[308] = character[1]->position->x;
+													bufMapJoueur[309] = character[1]->position->y;
+												}
+
+												printf("Envoi des données en cours\n");
+												for(i=0;i<2;i++){
+													write(client[i],bufMapJoueur,310*sizeof(int));
+												}
+												printf("Envoi des données fini\n");
+											}
 									}
 							}
 					}
