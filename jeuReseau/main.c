@@ -182,13 +182,14 @@ void jouer(SDL_Surface *screen, Character character[2]){
   initGame(character);
 
 	afficher_carte(carte,screen, monstreActuel, character);
-    
+
     /*******************************************************************/
 
 	/*CLIENT*/
     SDL_EnableKeyRepeat(100, 100);
 
     /*Gestion du déplacement, PdV et autres états du jeu */
+		continuer = 1;
     while(continuer)
     {
 			printf("COUCOU");
@@ -202,6 +203,7 @@ void jouer(SDL_Surface *screen, Character character[2]){
                 switch(event.key.keysym.sym)
                 {
                     case SDLK_ESCAPE:
+												sendToServer(client, 5);
                         continuer = 0;
                         break;
 						/* Ici la gestion des déplacements (CLIENT)
