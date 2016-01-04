@@ -124,6 +124,17 @@ void jouer(SDL_Surface *screen, Character character[2]){
     }
     m++;
   }
+  character[0]->life = info[300];
+  character[0]->key = info[301];
+  character[0]->gold = info[302];
+  character[0]->position->x = info[303];
+  character[0]->position->y = info[304];
+
+  character[1]->life = info[305];
+  character[1]->key = info[306];
+  character[1]->gold = info[307];
+  character[1]->position->x = info[308];
+  character[1]->position->y = info[309];
 
   /* info => carte et position des joueurs sous le format
     M:<Map>J1:<posJ1>J2:<posJ2>
@@ -163,14 +174,19 @@ void jouer(SDL_Surface *screen, Character character[2]){
 						 * (peut-être échanger avec un mineChar et EnnemyChar)
 						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché*/
                     case SDLK_UP: //touche du haut
+                        sendToServer(client, "0");
                         break;
                     case SDLK_DOWN: // touche du bas
+                        sendToServer(client, "1");
                         break;
                     case SDLK_RIGHT: // touche de droite
+                        sendToServer(client, "3");
                         break;
                     case SDLK_LEFT: //touche de gauche
+                        sendToServer(client, "2");
                         break;
                     case SDLK_a: //On pose une bombe
+                        sendToServer(client, "18");
                         break;
                     default:
                         break;
