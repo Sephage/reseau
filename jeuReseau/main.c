@@ -106,13 +106,25 @@ int main(int argc, char *argv[])
 void jouer(SDL_Surface *screen, int vieClefOr[3]){
 
   Client client;
-  char* info = malloc(BUFF_SIZE_RECV*sizeof(char));
+  int* info = malloc(BUFF_SIZE_RECV*sizeof(int));
+
+  int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR] = {0};
+  int k, l, m;
 
   connexionToServer(&client);
 
   /* Mettre un message disant "Attente d'un autre joueur" */
 
   info = receiveFromServer(client);
+
+  m = 0;
+  while(k < 300) {
+    for(l=0; l < 15; l++) {
+      carte[l][m] = info[k];
+      k++;
+    }
+    m++;
+  }
 
   /* info => carte et position des joueurs sous le format
     M:<Map>J1:<posJ1>J2:<posJ2>
@@ -126,7 +138,6 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
 
     SDL_Event event;
     int continuer = 1,i,j, nbTour = 0;
-    int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR] = {0};
 
 
     personnage[BAS] = SDL_LoadBMP("sprites/BomberFront.bmp");
