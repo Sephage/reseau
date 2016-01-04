@@ -351,8 +351,7 @@ void deplacer_monstre(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *p
 /************************dans la fonction ecran_de_fin***********************/
 /****************************************************************************/
 
-void pauseSDL()
-{
+void pauseSDL(){
     SDL_Event event;
     int continuer = 1;
 
