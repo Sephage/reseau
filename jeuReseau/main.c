@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
         SDL_FillRect(screen,NULL, SDL_MapRGB(screen->format,0,0,0));
         SDL_BlitSurface(imageMenu,NULL, screen, &positionMenu);
         SDL_Flip(screen);
-        }
+    }
 
         afficher_ecran_de_fin(screen, character[0]);
 
@@ -190,32 +190,22 @@ void jouer(SDL_Surface *screen, Character character[2]){
 
     /*Gestion du déplacement, PdV et autres états du jeu */
 		continuer = 1;
-    while(continuer)
-    {
-			printf("COUCOU");
+    while(continuer){
         SDL_WaitEvent(&event);
-        switch(event.type)
-        {
+        switch(event.type){
             case SDL_QUIT:
                 continuer = 0;
                 break;
             case SDL_KEYDOWN:
-                switch(event.key.keysym.sym)
-                {
+                switch(event.key.keysym.sym){
                     case SDLK_ESCAPE:
-												sendToServer(client, 5);
+						sendToServer(client, 5);
                         continuer = 0;
                         break;
-						/* Ici la gestion des déplacements (CLIENT)
-						 * personnageActuel = character.actualCharacter
-						 * deplacer_personnage prend en param :
-						 * Un tableau de Character
-						 * (peut-être échanger avec un mineChar et EnnemyChar)
-						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché*/
-                    case SDLK_UP: //touche du haut
+                    case SDLK_z: //touche du haut
                         sendToServer(client, 0);
                         break;
-                    case SDLK_DOWN: // touche du bas
+                    case SDLK_s: // touche du bas
                         sendToServer(client, 1);
                         break;
                     case SDLK_RIGHT: // touche de droite
@@ -228,6 +218,7 @@ void jouer(SDL_Surface *screen, Character character[2]){
                         sendToServer(client, 18);
                         break;
                     default:
+		printf("COUCOU\n");
                         break;
                 }
                 break;
@@ -259,8 +250,8 @@ void jouer(SDL_Surface *screen, Character character[2]){
                 }
             }
 		*/
-
-      info = receiveFromServer(client);
+		continuer = 0;
+     // info = receiveFromServer(client);
 
       m = 0;
       while(k < 300) {

@@ -142,14 +142,12 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
         SDL_BlitSurface(texteClef, NULL, screen, &position);
         position.y = 80;
         SDL_BlitSurface(texteOr, NULL, screen, &position);
-
 	for( i=0;i<2;i++){
 			position.x = character[i]->position->x * TAILLE_BLOC;
 			position.y = character[i]->position->y * TAILLE_BLOC;
 			SDL_BlitSurface((character[i]->actualCharacter), NULL, screen, &position);
 	}
     SDL_Flip(screen);
-
     /**Libération des surfaces**/
     SDL_FreeSurface(piege);
     SDL_FreeSurface(coffre);
