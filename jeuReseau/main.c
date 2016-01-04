@@ -10,9 +10,8 @@
 
 
 /**Fonction main : Affichage de l'aide, appel des fonctions, initialisation des tableau **/
-int main(int argc, char *argv[])
-{
-    /* Initialisation des différentes bibliothčques SDL*
+int main(int argc, char *argv[]){
+    /* Initialisation des différentes bibliotheques SDL*
      * Ici TTF et SDL
      * */
 
@@ -25,8 +24,8 @@ int main(int argc, char *argv[])
 
     int continuer = 1;
 	Character character[2];
-	character[0]->life = 10;
-	character[0]->gold = 0;
+/*	character[0]->life = 10;
+	character[0]->gold = 0;*/
     SDL_WM_SetCaption("Jeu version 1.0", NULL);
     screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF| SDL_FULLSCREEN);
 
