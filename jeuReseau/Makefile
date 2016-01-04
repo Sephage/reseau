@@ -1,6 +1,6 @@
 all : Bombermine
 
-Bombermine :  main.o niveau.o display.o deplacement.o client.o
+Bombermine :  main.o niveau.o display.o deplacement.o client.o 
 	gcc -o Bombermine main.o niveau.o display.o deplacement.o client.o `sdl-config --libs --cflags` -lSDL_ttf -g
 
 main.o : main.c constantes.h main.h niveau.h client.h

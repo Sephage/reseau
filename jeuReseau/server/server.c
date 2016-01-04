@@ -19,13 +19,17 @@ int main(){
 		 * map contient la map (qu'il faudra renvoyer à chaque changement
 		 * character contiendra les états des deux personnages, 0 sera le premier arrivé
 		 */
-		int buf[1];
-		int map[20][15];
-		int bufMapJoueur[310];
+		int buf[1] = {0};
+		int map[20][15] = {(0,0)};
+		int bufMapJoueur[310] ={0};
 		int i,j,k;
 		int continuer = 1;
 
 		Character character[2];
+		for(i=0;i<2;i++){
+			character[i] = malloc(sizeof(struct character));
+			character[i]->position = malloc(sizeof(SDL_Rect*));
+		}
 
 		int so_reuseaddr = 1;
 
@@ -84,10 +88,12 @@ int main(){
 		 * A completer */
 		initGame(character, map);
 		k = 0;
-		for(i=0;i<NB_BLOCS_LARGEUR;i++){
-			for(j=0;j<NB_BLOCS_HAUTEUR;i++){
-				bufMapJoueur[k] = map[i][j];
-				k++;
+		while(k < 300) {
+			for(i=0;i<NB_BLOCS_LARGEUR;i++){
+				for(j=0;j<NB_BLOCS_HAUTEUR;j++){
+					bufMapJoueur[k] = map[i][j];
+					k++;
+				}
 			}
 		}
 		bufMapJoueur[300] = character[0]->life;
@@ -102,9 +108,11 @@ int main(){
 		bufMapJoueur[308] = character[1]->position->x;
 		bufMapJoueur[309] = character[1]->position->y;
 		
+		printf("Envoi des données en cours\n");
 		for(i=0;i<2;i++){
-			write(client[i],bufMapJoueur,310);
+			write(client[i],bufMapJoueur,310*sizeof(int));
 		}
+		printf("Envoi des données fini\n");
 
 		/*Tant que l'un des joueurs n'a pas gagné ou perdu...*/
 		while(continuer){

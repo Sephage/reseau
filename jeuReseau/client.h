@@ -11,9 +11,9 @@
 
 /* default values */
 #define PORT 31337 // Port the server is listening to
-#define IP_SERVER 127.0.0.1 // IP of the server
+#define IP_SERVER "127.0.0.1" // IP of the server
 #define BUFF_SIZE_SEND 40 // max Size of the sent message
-#define BUFF_SIZE_RECV 410 // max Size of the received message
+#define BUFF_SIZE_RECV 310 // max Size of the received message
 
 typedef struct {
   struct sockaddr_in serverAddr;
@@ -22,6 +22,7 @@ typedef struct {
 }Client;
 
 void connexionToServer(Client* client);
-void sendToServer(Client client, char *msg);
+void sendToServer(Client client, int msg);
 int* receiveFromServer(Client client);
 void deconnexionFromServer(Client* client);
+

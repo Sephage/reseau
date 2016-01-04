@@ -35,7 +35,6 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
     piege = SDL_LoadBMP("sprites/piege.bmp");
     coffre = SDL_LoadBMP("sprites/coffre.bmp");
     pieceOr = SDL_LoadBMP("sprites/or.bmp");
-    /*monstreActuel = SDL_LoadBMP("sprites/Slim_violet_face.bmp");*/
     rocher = SDL_LoadBMP("sprites/Ice.bmp");
 
     bombe = SDL_LoadBMP("sprites/Bomb.bmp");
@@ -46,11 +45,10 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
     explosionDroite = SDL_LoadBMP("sprites/Explosion_Droite.bmp");
 
 
-
+/*
     SDL_SetColorKey(clef, SDL_SRCCOLORKEY, SDL_MapRGB(clef->format, 255, 255, 255));
     SDL_SetColorKey(piege, SDL_SRCCOLORKEY, SDL_MapRGB(piege->format, 255, 255, 255));
     SDL_SetColorKey(coffre, SDL_SRCCOLORKEY, SDL_MapRGB(coffre->format, 255, 255, 255));
-    /*SDL_SetColorKey(monstreActuel, SDL_SRCCOLORKEY, SDL_MapRGB(monstreActuel->format, 255, 255, 255));*/
     SDL_SetColorKey(pieceOr, SDL_SRCCOLORKEY, SDL_MapRGB(pieceOr->format, 255, 255, 255));
     SDL_SetColorKey(rocher, SDL_SRCCOLORKEY, SDL_MapRGB(rocher->format, 255, 255, 255));
 
@@ -61,8 +59,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
     SDL_SetColorKey(explosionGauche, SDL_SRCCOLORKEY, SDL_MapRGB(explosionGauche->format, 255, 255, 255));
     SDL_SetColorKey(explosionDroite, SDL_SRCCOLORKEY, SDL_MapRGB(explosionDroite->format, 255, 255, 255));
 
-
-
+*/
 
         /**Efface l'écran puis réaffiche les blocs réactualisé**/
     /** C'est cette fonction qui réactualise l'écran, il faut en faire une fonction */
@@ -119,7 +116,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
                 /*Remise des cases où une bombe à explosée en VIDE
 				 * A mettre dans le serveur*/
                 if(carte[i][j] <= 18 && carte[i][j] > 8){
-                    SDL_BlitSurface(bombe,NULL,screen, character[0]->position);
+                    SDL_BlitSurface(bombe,NULL,screen, &position);
                 }
                     /*Si la bombe à déjà explosée*/
                     if(carte[i][j] >= 19){
@@ -149,7 +146,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
 	for( i=0;i<2;i++){
 			position.x = character[i]->position->x * TAILLE_BLOC;
 			position.y = character[i]->position->y * TAILLE_BLOC;
-			SDL_BlitSurface(character[i]->actualCharacter, NULL, screen, &position);
+			SDL_BlitSurface((character[i]->actualCharacter), NULL, screen, &position);
 	}
     SDL_Flip(screen);
 

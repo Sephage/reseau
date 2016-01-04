@@ -8,7 +8,33 @@
 #include "niveau.h"
 #include "client.h"
 
+void initGame(Character character[2]){
+	character[0]->character[BAS] = SDL_LoadBMP("sprites/BomberFront.bmp");
+	character[0]->character[HAUT] = SDL_LoadBMP("sprites/BomberBack.bmp");
+	character[0]->character[DROITE] = SDL_LoadBMP("sprites/BomberRight.bmp");
+	character[0]->character[GAUCHE] = SDL_LoadBMP("sprites/BomberLeft.bmp");
+	character[0]->actualCharacter = character[0]->character[HAUT];
 
+/*	SDL_SetColorKey(character[0]->character[BAS], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[BAS]->format), 255, 255, 255));
+	printf("COUCOU\n");
+	SDL_SetColorKey(character[0]->character[HAUT], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[HAUT]->format), 255, 255, 255));
+	SDL_SetColorKey(character[0]->character[DROITE], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[DROITE]->format), 255, 255, 255));
+	SDL_SetColorKey(character[0]->character[GAUCHE], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[GAUCHE]->format), 255, 255, 255));
+*/
+
+	/*Load different pictures here*/
+	character[1]->character[BAS] = SDL_LoadBMP("sprites/BomberFront.bmp");
+	character[1]->character[HAUT] = SDL_LoadBMP("sprites/BomberBack.bmp");
+	character[1]->character[DROITE] = SDL_LoadBMP("sprites/BomberRight.bmp");
+	character[1]->character[GAUCHE] = SDL_LoadBMP("sprites/BomberLeft.bmp");
+	character[1]->actualCharacter = character[1]->character[HAUT];
+/*
+	SDL_SetColorKey(character[1]->character[BAS], SDL_SRCCOLORKEY, SDL_MapRGB((character[1]->character[BAS]->format), 255, 255, 255));
+	SDL_SetColorKey(character[1]->character[HAUT], SDL_SRCCOLORKEY, SDL_MapRGB((character[1]->character[HAUT]->format), 255, 255, 255));
+	SDL_SetColorKey(character[1]->character[DROITE], SDL_SRCCOLORKEY, SDL_MapRGB(character[1]->character[DROITE]->format, 255, 255, 255));
+	SDL_SetColorKey(character[1]->character[GAUCHE], SDL_SRCCOLORKEY, SDL_MapRGB(character[1]->character[GAUCHE]->format, 255, 255, 255));
+*/
+}
 /**Fonction main : Affichage de l'aide, appel des fonctions, initialisation des tableau **/
 int main(int argc, char *argv[]){
     /* Initialisation des différentes bibliotheques SDL*
@@ -24,8 +50,20 @@ int main(int argc, char *argv[]){
 
     int continuer = 1;
 	Character character[2];
-/*	character[0]->life = 10;
-	character[0]->gold = 0;*/
+	int i;
+	for(i=0;i<2;i++){
+		character[i] = malloc(sizeof(struct character));
+		character[i]->position = malloc(sizeof(SDL_Rect));
+
+		character[i]->character[0] = malloc(sizeof(SDL_Surface));
+		character[i]->character[1] = malloc(sizeof(SDL_Surface));
+		character[i]->character[2] = malloc(sizeof(SDL_Surface));
+		character[i]->character[3] = malloc(sizeof(SDL_Surface));
+
+		character[i]->actualCharacter = malloc(sizeof(SDL_Surface));
+	}
+	character[0]->life = 10;
+	character[0]->gold = 0;
     SDL_WM_SetCaption("Jeu version 1.0", NULL);
     screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
@@ -107,7 +145,14 @@ void jouer(SDL_Surface *screen, Character character[2]){
   int* info = malloc(BUFF_SIZE_RECV*sizeof(int));
 
   int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR] = {0};
-  int k, l, m;
+  int k = 0, l, m;
+
+	SDL_Surface *monstreActuel = NULL;
+    SDL_Rect positionMonstre;
+
+    SDL_Event event;
+    int continuer = 1,i,j, nbTour = 0;
+
 
   connexionToServer(&client);
 
@@ -116,7 +161,7 @@ void jouer(SDL_Surface *screen, Character character[2]){
   info = receiveFromServer(client);
 
   m = 0;
-  while(k < 300) {
+  while((k < 300) && (m < 20)) {
     for(l=0; l < 15; l++) {
       carte[l][m] = info[k];
       k++;
@@ -134,18 +179,10 @@ void jouer(SDL_Surface *screen, Character character[2]){
   character[1]->gold = info[307];
   character[1]->position->x = info[308];
   character[1]->position->y = info[309];
+  initGame(character);
 
-  /* info => carte et position des joueurs sous le format
-    M:<Map>J1:<posJ1>J2:<posJ2>
-    Il faut maintenant afficher la carte en fonction de ces données */
-
-    SDL_Surface *monstreActuel = NULL;
-    SDL_Rect positionMonstre;
-
-    SDL_Event event;
-    int continuer = 1,i,j, nbTour = 0;
-
-
+	afficher_carte(carte,screen, monstreActuel, character);
+    
     /*******************************************************************/
 
 	/*CLIENT*/
@@ -173,19 +210,19 @@ void jouer(SDL_Surface *screen, Character character[2]){
 						 * (peut-être échanger avec un mineChar et EnnemyChar)
 						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché*/
                     case SDLK_UP: //touche du haut
-                        sendToServer(client, "0");
+                        sendToServer(client, 0);
                         break;
                     case SDLK_DOWN: // touche du bas
-                        sendToServer(client, "1");
+                        sendToServer(client, 1);
                         break;
                     case SDLK_RIGHT: // touche de droite
-                        sendToServer(client, "3");
+                        sendToServer(client, 3);
                         break;
                     case SDLK_LEFT: //touche de gauche
-                        sendToServer(client, "2");
+                        sendToServer(client, 2);
                         break;
                     case SDLK_a: //On pose une bombe
-                        sendToServer(client, "18");
+                        sendToServer(client, 18);
                         break;
                     default:
                         break;

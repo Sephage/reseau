@@ -22,14 +22,14 @@ void connexionToServer(Client* client) {
   }
 }
 
-void sendToServer(Client client, char* msg) {
-  int msgSize = strlen(msg);
+void sendToServer(Client client, int msg) {
+  int msgSize = sizeof(msg);
   int verif;
   if(msgSize > BUFF_SIZE_SEND) {
     error("ERROR message too long to send");
   }
   else {
-    verif = write(client.sockfd, msg, msgSize);
+    verif = write(client.sockfd, &msg, msgSize);
     if (verif < 0) {
       error("ERROR writing to socket");
     }
@@ -38,7 +38,7 @@ void sendToServer(Client client, char* msg) {
 
 int* receiveFromServer(Client client) {
   int* msg = malloc(BUFF_SIZE_RECV*sizeof(int));
-  int check = read(client.sockfd, msg, BUFF_SIZE_RECV);
+  int check = read(client.sockfd, msg, BUFF_SIZE_RECV*sizeof(int));
   if (check < 0) {
     error("ERROR reading from socket or connexion lost");
     return NULL;
