@@ -3,10 +3,11 @@
 #include <unistd.h>
 #include <malloc.h>
 #include <stdio.h>
-#include "constantes.h"
+
+#include "../constantes.h"
 
 /*Il faudra mettre ici la bonne déclaration de la fonction j'ai la flemme de la mettre*/
-int initCarte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], char* fichierNiveau){
+int initMap(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], char* fichierNiveau){
     int fd;
     char *car = malloc(sizeof(char));
     int x = 0;

@@ -1,13 +1,13 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
-#include "../main.h"
 #include "server.h"
 
 int main(){
@@ -28,7 +28,6 @@ int main(){
 		Character character[2];
 		for(i=0;i<2;i++){
 			character[i] = malloc(sizeof(struct character));
-			character[i]->position = malloc(sizeof(SDL_Rect*));
 		}
 
 		int so_reuseaddr = 1;
@@ -99,14 +98,14 @@ int main(){
 		bufMapJoueur[300] = character[0]->life;
 		bufMapJoueur[301] = character[0]->key;
 		bufMapJoueur[302] = character[0]->gold;
-		bufMapJoueur[303] = character[0]->position->x;
-		bufMapJoueur[304] = character[0]->position->x;
+		bufMapJoueur[303] = character[0]->x;
+		bufMapJoueur[304] = character[0]->x;
 
 		bufMapJoueur[305] = character[1]->life;
 		bufMapJoueur[306] = character[1]->key;
 		bufMapJoueur[307] = character[1]->gold;
-		bufMapJoueur[308] = character[1]->position->x;
-		bufMapJoueur[309] = character[1]->position->y;
+		bufMapJoueur[308] = character[1]->x;
+		bufMapJoueur[309] = character[1]->y;
 
 		printf("Envoi des données en cours\n");
 		for(i=0;i<2;i++){
@@ -162,7 +161,7 @@ int main(){
 												continuer = 0;
 											}
 											else {
-												deplacer_personnage(map, buf[0], character[i]);
+												move_character(map, buf[0], character[i]);
 												if(character[i]->life == 0 || character[i]->gold == 10) {
 
 													bufMapJoueur[0] = 30;
@@ -196,14 +195,14 @@ int main(){
 													bufMapJoueur[300] = character[0]->life;
 													bufMapJoueur[301] = character[0]->key;
 													bufMapJoueur[302] = character[0]->gold;
-													bufMapJoueur[303] = character[0]->position->x;
-													bufMapJoueur[304] = character[0]->position->x;
+													bufMapJoueur[303] = character[0]->x;
+													bufMapJoueur[304] = character[0]->x;
 
 													bufMapJoueur[305] = character[1]->life;
 													bufMapJoueur[306] = character[1]->key;
 													bufMapJoueur[307] = character[1]->gold;
-													bufMapJoueur[308] = character[1]->position->x;
-													bufMapJoueur[309] = character[1]->position->y;
+													bufMapJoueur[308] = character[1]->x;
+													bufMapJoueur[309] = character[1]->y;
 												}
 
 												printf("Envoi des données en cours\n");
