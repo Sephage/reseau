@@ -6,7 +6,6 @@
 #include "main.h"
 #include "constantes.h"
 #include "niveau.h"
-#include "joueur.h"
 #include "client.h"
 
 
@@ -64,7 +63,7 @@ int main(int argc, char *argv[])
                 case SDLK_a:
                     jouer(screen, vieClefOr);
                     afficher_ecran_de_fin(screen, vieClefOr);
-                    pause();
+                    pauseSDL();
                     //continuer = 0;
                     break;
                 case SDLK_KP2:
@@ -187,25 +186,16 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
 						 * deplacer_personnage prend en param :
 						 * Un tableau de Character
 						 * (peut-être échanger avec un mineChar et EnnemyChar)
-						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché
+						 * ESCAPE = ECHAP UP/DOWN/RIGHT/LEFT = touche fléché*/
                     case SDLK_UP: //touche du haut
-                        personnageActuel = personnage[HAUT];
-                        deplacer_personnage(carte, &positionJoueur, HAUT, vieClefOr);
                         break;
                     case SDLK_DOWN: // touche du bas
-                        personnageActuel = personnage[BAS];
-                        deplacer_personnage(carte, &positionJoueur, BAS, vieClefOr);
                         break;
                     case SDLK_RIGHT: // touche de droite
-                        personnageActuel = personnage[DROITE];
-                        deplacer_personnage(carte, &positionJoueur, DROITE, vieClefOr);
                         break;
                     case SDLK_LEFT: //touche de gauche
-                        personnageActuel = personnage[GAUCHE];
-                        deplacer_personnage(carte, &positionJoueur, GAUCHE, vieClefOr);
                         break;
                     case SDLK_a: //On pose une bombe
-                        carte[positionJoueur.x][positionJoueur.y] = BOMBE;
                         break;
                     default:
                         break;
@@ -262,12 +252,11 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
 
     //SDL_FreeSurface(monstreActuel);
 
-    for(i=0; i<4; i++)
-    {
+    for(i=0; i<4; i++){
         SDL_FreeSurface(personnage[i]);
     }
 
-  client = deconnexionFromServer(&client);
+  	deconnexionFromServer(&client);
 }
 
 void deplacer_monstre(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *positionMonstre, SDL_Rect *positionJoueur, int vieClefOr[3], SDL_Surface *monstreActuel)
@@ -362,7 +351,7 @@ void deplacer_monstre(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Rect *p
 /************************dans la fonction ecran_de_fin***********************/
 /****************************************************************************/
 
-void pause()
+void pauseSDL()
 {
     SDL_Event event;
     int continuer = 1;
@@ -387,29 +376,4 @@ void pause()
             break;
         }
     }
-}
-
-
-
-
-/**************************************************************/
-/***************** Afficher la fenętre d'aide *****************/
-/**************************************************************/
-void aide(SDL_Surface *screen)
-{
-    SDL_Surface *aide = NULL;
-    SDL_Rect position;
-
-    aide = SDL_LoadBMP("sprites/aide.bmp");
-
-    position.x = 0;
-    position.y = 0;
-
-    SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format, 0,0,0));
-
-    SDL_BlitSurface(aide, NULL, screen, &position);
-    SDL_Flip(screen);
-    pause();
-
-    SDL_FreeSurface(aide);
 }

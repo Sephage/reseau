@@ -13,7 +13,7 @@ void connexionToServer(Client* client) {
   }
 
   client->serverAddr.sin_family = AF_INET;
-  client->serverAddr.sin_addr.s_addr = inet_addr(IP_SERVER);
+  client->serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   client->serverAddr.sin_port = htons(PORT);
   memset(&client->serverAddr.sin_zero, 0, sizeof(client->serverAddr.sin_zero));
 
@@ -24,12 +24,13 @@ void connexionToServer(Client* client) {
 
 void sendToServer(Client client, char* msg) {
   int msgSize = strlen(msg);
+  int verif;
   if(msgSize > BUFF_SIZE_SEND) {
     error("ERROR message too long to send");
   }
   else {
     verif = write(client.sockfd, msg, msgSize);
-    if (n < 0) {
+    if (verif < 0) {
       error("ERROR writing to socket");
     }
   }
@@ -44,7 +45,7 @@ char* receiveFromServer(Client client) {
   }
   if(strlen(msg) > BUFF_SIZE_RECV) {
     error("ERROR message received too long");
-    msg = "long"
+    msg = "long";
   }
 
   return msg;

@@ -4,11 +4,12 @@
 #include <SDL/SDL_ttf.h>
 
 #include "constantes.h"
+#include "joueur.h"
 
 void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *screen, SDL_Surface *monstreActuel, Character character[2])
 {
     SDL_Surface *piege = NULL, *coffre = NULL;
-    SDL_Surface /**monstreActuel = NULL,*/ *clef = NULL, *pieceOr = NULL;
+    SDL_Surface *clef = NULL, *pieceOr = NULL;
     SDL_Surface *rocher = NULL, *herbe = NULL;
     SDL_Surface *bombe = NULL, *explosion= NULL, *explosionHaut = NULL, *explosionBas = NULL, *explosionGauche = NULL, *explosionDroite = NULL;
 
@@ -118,7 +119,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
                 /*Remise des cases où une bombe à explosée en VIDE
 				 * A mettre dans le serveur*/
                 if(carte[i][j] <= 18 && carte[i][j] > 8){
-                    SDL_BlitSurface(bombe,NULL,screen, &position);
+                    SDL_BlitSurface(bombe,NULL,screen, character[0]->position);
                 }
                     /*Si la bombe à déjà explosée*/
                     if(carte[i][j] >= 19){
@@ -128,24 +129,26 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
         }
                 /** Gestion du texte de vie, clef et or du joueur **/
 
-        sprintf(tabVie,"Vie : %d", vieClefOr[0]);
+        sprintf(tabVie,"Vie : %d", character[0]->life);
         texteVie = TTF_RenderText_Solid(police, tabVie, couleurVerte);
-        sprintf(tabClef,"Clef : %d", vieClefOr[1]);
+        sprintf(tabClef,"Clef : %d", character[0]->key);
         texteClef = TTF_RenderText_Solid(police, tabClef, couleurVerte);
-        sprintf(tabOr, "Or : %d", vieClefOr[2]);
+        sprintf(tabOr, "Or : %d", character[0]->gold);
         texteOr = TTF_RenderText_Solid(police, tabOr, couleurVerte);
 
         position.x = NB_BLOCS_LARGEUR * TAILLE_BLOC;
+
         position.y = 0;
         SDL_BlitSurface(texteVie, NULL, screen, &position);
         position.y = 40;
         SDL_BlitSurface(texteClef, NULL, screen, &position);
         position.y = 80;
         SDL_BlitSurface(texteOr, NULL, screen, &position);
+
 	for( i=0;i<2;i++){
-			position.x = character[i].position->x * TAILLE_BLOC;
-			position.y = character[i].position->y * TAILLE_BLOC;
-			SDL_BlitSurface(character[i].actualCharacter, NULL, screen, &position);
+			position.x = character[i]->position->x * TAILLE_BLOC;
+			position.y = character[i]->position->y * TAILLE_BLOC;
+			SDL_BlitSurface(character[i]->actualCharacter, NULL, screen, &position);
 	}
     SDL_Flip(screen);
 
@@ -232,8 +235,7 @@ void afficher_ecran_de_fin(SDL_Surface *screen, int vieClefOr[3])
 /**************************************************************/
 /***************** Afficher la fenętre d'aide *****************/
 /**************************************************************/
-void aide(SDL_Surface *screen)
-{
+void aide(SDL_Surface *screen){
     SDL_Surface *aide = NULL;
     SDL_Rect position;
 

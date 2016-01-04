@@ -12,7 +12,7 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int dire
     switch(direction) /**y-1*/
     {
       /**/case HAUT:
-            if(personnage->personnage->position->y - 1 < 0)
+            if(personnage->position->y - 1 < 0)
             {
                 /**On arrete ici si la case suivante sort du tableau**/
             }
