@@ -194,7 +194,7 @@ void afficher_monstre(SDL_Rect *positionMonstre, SDL_Surface *screen, SDL_Surfac
 /******************* Affiche l'écran de fin suivant les cas ******************/
 /*****************************************************************************/
 
-void afficher_ecran_de_fin(SDL_Surface *screen, int vieClefOr[3])
+void afficher_ecran_de_fin(SDL_Surface *screen, Character character)
 {
     SDL_Surface *texte;
     TTF_Font *police;
@@ -209,13 +209,13 @@ void afficher_ecran_de_fin(SDL_Surface *screen, int vieClefOr[3])
 
     SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format, 0,0,0));
 
-    if(vieClefOr[0] ==  0)  //SI la vie descend a 0
+    if(character->life ==  0)  //SI la vie descend a 0
     {
         texte = TTF_RenderText_Shaded(police,"Vous avez perdu !!", couleurVerte, couleurNoire);
         position.x = 280;
 
     }
-    else if(vieClefOr[2] >= 10) //Si le joueur à plus de 10 pičces d'or
+    else if(character->gold >= 10) //Si le joueur à plus de 10 pičces d'or
     {
         texte = TTF_RenderText_Shaded(police, "Vous avez gagne !!", couleurVerte, couleurNoire);
         position.x = 270;

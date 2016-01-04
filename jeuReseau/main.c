@@ -24,8 +24,9 @@ int main(int argc, char *argv[])
     SDL_Event event;
 
     int continuer = 1;
-    int vieClefOr[3] = {10,0,0};
-
+	Character character[2];
+	character[0]->life = 10;
+	character[0]->gold = 0;
     SDL_WM_SetCaption("Jeu version 1.0", NULL);
     screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF| SDL_FULLSCREEN);
 
@@ -42,8 +43,6 @@ int main(int argc, char *argv[])
 
     while(continuer)
     {
-        vieClefOr[0] = 10;
-        vieClefOr[1] = vieClefOr[2] = 0;
         SDL_WaitEvent(&event);
         /* Ici on récupère quel est le type d'évènement */
         switch(event.type)
@@ -61,8 +60,8 @@ int main(int argc, char *argv[])
                     break;
                 case SDLK_KP1:
                 case SDLK_a:
-                    jouer(screen, vieClefOr);
-                    afficher_ecran_de_fin(screen, vieClefOr);
+                    jouer(screen, character);
+                    afficher_ecran_de_fin(screen, character[0]);
                     pauseSDL();
                     //continuer = 0;
                     break;
@@ -86,7 +85,7 @@ int main(int argc, char *argv[])
         SDL_Flip(screen);
         }
 
-        afficher_ecran_de_fin(screen, vieClefOr);
+        afficher_ecran_de_fin(screen, character[0]);
 
     /**Libération des police et fermeture des bibliothčque**/
     SDL_FreeSurface(imageMenu);
@@ -103,7 +102,7 @@ int main(int argc, char *argv[])
 /******************* de déplacement et de gestion de collisions *******************/
 /**********************************************************************************/
 
-void jouer(SDL_Surface *screen, int vieClefOr[3]){
+void jouer(SDL_Surface *screen, Character character[2]){
 
   Client client;
   int* info = malloc(BUFF_SIZE_RECV*sizeof(int));
@@ -130,55 +129,20 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
     M:<Map>J1:<posJ1>J2:<posJ2>
     Il faut maintenant afficher la carte en fonction de ces données */
 
-
-    SDL_Surface *personnage[4] = {NULL, NULL, NULL, NULL};
-    SDL_Surface *personnageActuel = NULL;
     SDL_Surface *monstreActuel = NULL;
-    SDL_Rect positionJoueur, positionMonstre;
+    SDL_Rect positionMonstre;
 
     SDL_Event event;
     int continuer = 1,i,j, nbTour = 0;
 
 
-    personnage[BAS] = SDL_LoadBMP("sprites/BomberFront.bmp");
-    personnage[HAUT] = SDL_LoadBMP("sprites/BomberBack.bmp");
-    personnage[DROITE] = SDL_LoadBMP("sprites/BomberRight.bmp");
-    personnage[GAUCHE] = SDL_LoadBMP("sprites/BomberLeft.bmp");
-
-
-    SDL_SetColorKey(personnage[BAS], SDL_SRCCOLORKEY, SDL_MapRGB(personnage[BAS]->format, 255, 255, 255));
-    SDL_SetColorKey(personnage[HAUT], SDL_SRCCOLORKEY, SDL_MapRGB(personnage[HAUT]->format, 255, 255, 255));
-    SDL_SetColorKey(personnage[DROITE], SDL_SRCCOLORKEY, SDL_MapRGB(personnage[DROITE]->format, 255, 255, 255));
-    SDL_SetColorKey(personnage[GAUCHE], SDL_SRCCOLORKEY, SDL_MapRGB(personnage[GAUCHE]->format, 255, 255, 255));
-
-
     /*******************************************************************/
-
-    personnageActuel = personnage[HAUT]; //Personnage de départ et celui de face
-
-    initCarte(carte,"map/niveau3.map") ;
-
-    /**Initialisation de la position du joueur pour la premičre fois**/
-
-    for(j=0; j<NB_BLOCS_HAUTEUR; j++)
-    {
-        for(i=0;i<NB_BLOCS_LARGEUR; i++)
-        {
-            if(carte[i][j] == PERSONNAGE)
-            {
-                positionJoueur.x = i;
-                positionJoueur.y = j;
-                carte[i][j] = VIDE;
-            }
-
-        }
-    }
 
 	/*CLIENT*/
     SDL_EnableKeyRepeat(100, 100);
 
     /*Gestion du déplacement, PdV et autres états du jeu */
-    while(continuer && vieClefOr[0] != 0 && vieClefOr[2] < 10)
+    while(continuer)
     {
         SDL_WaitEvent(&event);
         switch(event.type)
@@ -214,25 +178,8 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
                 break;
         }
 
-        /**********************************************************/
-
-/*
-        for(i=0;i<NB_BLOCS_LARGEUR; i++)
-        {
-            for(j=0; j<NB_BLOCS_HAUTEUR; j++)
-            {
-                if(carte[i][j] == MONSTRE)
-                   {
-                        positionMonstre.x = i;
-                        positionMonstre.y = j;
-
-                        deplacer_monstre(carte, &positionMonstre, &positionJoueur, vieClefOr, monstreActuel);
-                        //afficher_monstre(carte, &positionMonstre, screen, monstreActuel);
-                   }
-            }
-        }
-        */
         /*Algorithme qui fait exploser les bombes tous les 5 tours*/
+		/*
             for(i=0;i<NB_BLOCS_LARGEUR;i++){
                 for(j=0; j<NB_BLOCS_HAUTEUR;j++){
 
@@ -256,15 +203,8 @@ void jouer(SDL_Surface *screen, int vieClefOr[3]){
 
                 }
             }
-
-        afficher_carte(carte,&positionJoueur ,screen, personnageActuel, vieClefOr, monstreActuel);
-    }
-
-
-    //SDL_FreeSurface(monstreActuel);
-
-    for(i=0; i<4; i++){
-        SDL_FreeSurface(personnage[i]);
+		*/
+        afficher_carte(carte,screen, monstreActuel, character);
     }
 
   	deconnexionFromServer(&client);

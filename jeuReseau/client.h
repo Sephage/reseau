@@ -23,5 +23,5 @@ typedef struct {
 
 void connexionToServer(Client* client);
 void sendToServer(Client client, char *msg);
-char* receiveFromServer(Client client);
+int* receiveFromServer(Client client);
 void deconnexionFromServer(Client* client);

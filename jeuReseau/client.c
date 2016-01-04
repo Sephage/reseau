@@ -43,11 +43,6 @@ int* receiveFromServer(Client client) {
     error("ERROR reading from socket or connexion lost");
     return NULL;
   }
-  if(strlen(msg) > BUFF_SIZE_RECV) {
-    error("ERROR message received too long");
-    msg = "long";
-  }
-
   return msg;
 }
 
