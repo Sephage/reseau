@@ -21,8 +21,8 @@ int main(){
 		 */
 		int buf[1];
 		int map[20][15];
-		int bufMapJoueur[420];
-		int i;
+		int bufMapJoueur[310];
+		int i,j,k;
 		int continuer = 1;
 
 		Character character[2];
@@ -32,7 +32,7 @@ int main(){
 		int actualNumberClient = 0;
 		int nb_client_aff = 0;
 		int descmax = 0;
-		int client[FD_SETSIZE];
+		int client[2];
 
 		struct timeval compte_rebours;
 
@@ -83,6 +83,29 @@ int main(){
 		/*Initialisation de la map et des joueurs
 		 * A completer */
 		initGame(character, map);
+		k = 0;
+		for(i=0;i<NB_BLOCS_LARGEUR;i++){
+			for(j=0;j<NB_BLOCS_HAUTEUR;i++){
+				bufMapJoueur[k] = map[i][j];
+				k++;
+			}
+		}
+		bufMapJoueur[300] = character[0]->life;
+		bufMapJoueur[301] = character[0]->key;
+		bufMapJoueur[302] = character[0]->gold;
+		bufMapJoueur[303] = character[0]->position->x;
+		bufMapJoueur[304] = character[0]->position->x;
+
+		bufMapJoueur[305] = character[1]->life;
+		bufMapJoueur[306] = character[1]->key;
+		bufMapJoueur[307] = character[1]->gold;
+		bufMapJoueur[308] = character[1]->position->x;
+		bufMapJoueur[309] = character[1]->position->y;
+		
+		for(i=0;i<2;i++){
+			write(client[i],bufMapJoueur,310);
+		}
+
 		/*Tant que l'un des joueurs n'a pas gagné ou perdu...*/
 		while(continuer){
 			FD_ZERO(&readfds);
