@@ -8,11 +8,11 @@
 /************ personnage->positionJoueur, et gestion des collisions ***************/
 /**********************************************************************/
 
-void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int direction, Character *personnage){
+void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int direction, Character personnage){
     switch(direction) /**y-1*/
     {
       /**/case HAUT:
-            if(personnage->personnage->position.y - 1 < 0)
+            if(personnage->personnage->position->y - 1 < 0)
             {
                 /**On arrete ici si la case suivante sort du tableau**/
             }

@@ -4,9 +4,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string.h>
-#include <netinet.h>
+#include <netinet/in.h>
 #include <unistd.h>
 
+#include "../joueur.h"
+#include "../main.h"
 
 int main(){
 		int s_ecoute, s_dial, cli_len;
@@ -17,8 +19,10 @@ int main(){
 		 * character contiendra les états des deux personnages, 0 sera le premier arrivé
 		 */
 		int buf[1];
-		int map[20][20];
+		int map[20][15];
+		int bufMapJoueur[420];
 		int i;
+		int continuer = 1;
 
 		Character character[2];
 
@@ -37,7 +41,7 @@ int main(){
 		/*********/
 
 		serv_addr.sin_family = AF_INET;
-		ser_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+		serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 		serv_addr.sin_port = htons(31337);
 		memset(&serv_addr.sin_zero, 0, sizeof(serv_addr.sin_zero));
 
@@ -52,11 +56,11 @@ int main(){
 				FD_ZERO(&readfds);
 				FD_SET(s_ecoute, &readfds);
 				descmax = s_ecoute;
-				for(i=0;i<actualNumberClient,i++){
+				for(i=0;i<actualNumberClient;i++){
 						FD_SET(client[i], &readfds);
 				}
 				if(s_dial > descmax){
-						descmax = s_dial:
+						descmax = s_dial;
 				}
 
 					nb_client_aff = select(descmax + 1, &readfds, NULL, NULL, &compte_rebours);
@@ -83,11 +87,11 @@ int main(){
 			FD_ZERO(&readfds);
 				FD_SET(s_ecoute, &readfds);
 				descmax = s_ecoute;
-				for(i=0;i<actualNumberClient,i++){
+				for(i=0;i<actualNumberClient;i++){
 						FD_SET(client[i], &readfds);
 				}
 				if(s_dial > descmax){
-						descmax = s_dial:
+						descmax = s_dial;
 				}
 
 					nb_client_aff = select(descmax + 1, &readfds, NULL, NULL, &compte_rebours);
@@ -104,7 +108,7 @@ int main(){
 											}
 											/*Traitement des touches que l'on recoit 
 											 * i=J1 ou J2 (prendre i+1) */
-											deplacer_personnage(map, buf, character[i]);
+											deplacer_personnage(map, buf[1], character[i]);
 									}
 							}
 					}
@@ -113,8 +117,5 @@ int main(){
 					 * aux deux joueurs
 					 * Ou renvoyer une indication de fin de jeu si l'un des personnages
 					 * a gagné et mettre continuer à 0 */
-		}
-}
-
 		}
 }
