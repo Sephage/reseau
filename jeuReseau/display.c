@@ -125,6 +125,7 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
                     if(carte[i][j] >= 19){
                         carte[i][j] = VIDE;
                     }
+					/*****************************************************************/
             }
         }
                 /** Gestion du texte de vie, clef et or du joueur **/
