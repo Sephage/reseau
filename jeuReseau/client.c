@@ -36,8 +36,8 @@ void sendToServer(Client client, char* msg) {
   }
 }
 
-char* receiveFromServer(Client client) {
-  char* msg = malloc(BUFF_SIZE_RECV*sizeof(char));
+int* receiveFromServer(Client client) {
+  int* msg = malloc(BUFF_SIZE_RECV*sizeof(int));
   int check = read(client.sockfd, msg, BUFF_SIZE_RECV);
   if (check < 0) {
     error("ERROR reading from socket or connexion lost");
