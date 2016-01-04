@@ -58,8 +58,8 @@ void afficher_carte(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], SDL_Surface *
     SDL_SetColorKey(explosionBas, SDL_SRCCOLORKEY, SDL_MapRGB(explosionBas->format, 255, 255, 255));
     SDL_SetColorKey(explosionGauche, SDL_SRCCOLORKEY, SDL_MapRGB(explosionGauche->format, 255, 255, 255));
     SDL_SetColorKey(explosionDroite, SDL_SRCCOLORKEY, SDL_MapRGB(explosionDroite->format, 255, 255, 255));
-
 */
+
 
         /**Efface l'écran puis réaffiche les blocs réactualisé**/
     /** C'est cette fonction qui réactualise l'écran, il faut en faire une fonction */
@@ -224,7 +224,7 @@ void afficher_ecran_de_fin(SDL_Surface *screen, Character character)
     }
         SDL_BlitSurface(texte, NULL, screen, &position);
         SDL_Flip(screen);
-        pause();
+//        pauseSDL();
         /**Libération des pointeurs**/
     TTF_CloseFont(police);
     SDL_FreeSurface(texte);
@@ -246,7 +246,7 @@ void aide(SDL_Surface *screen){
 
     SDL_BlitSurface(aide, NULL, screen, &position);
     SDL_Flip(screen);
-    pause();
+    pauseSDL();
 
     SDL_FreeSurface(aide);
 }

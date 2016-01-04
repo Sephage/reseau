@@ -13,7 +13,7 @@ void connexionToServer(Client* client) {
   }
 
   client->serverAddr.sin_family = AF_INET;
-  client->serverAddr.sin_addr.s_addr = inet_addr("192.168.43.17");
+  client->serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   client->serverAddr.sin_port = htons(PORT);
   memset(&client->serverAddr.sin_zero, 0, sizeof(client->serverAddr.sin_zero));
 
@@ -25,6 +25,7 @@ void connexionToServer(Client* client) {
 void sendToServer(Client client, int msg) {
   int msgSize = sizeof(msg);
   int verif;
+  printf("We want to send : %d\n",msg);
   if(msgSize > BUFF_SIZE_SEND) {
     error("ERROR message too long to send");
   }

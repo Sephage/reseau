@@ -14,8 +14,8 @@ void initGame(Character character[2]){
 	character[0]->character[DROITE] = SDL_LoadBMP("sprites/BomberRight.bmp");
 	character[0]->character[GAUCHE] = SDL_LoadBMP("sprites/BomberLeft.bmp");
 	character[0]->actualCharacter = character[0]->character[HAUT];
-
-/*	SDL_SetColorKey(character[0]->character[BAS], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[BAS]->format), 255, 255, 255));
+/*
+	SDL_SetColorKey(character[0]->character[BAS], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[BAS]->format), 255, 255, 255));
 	printf("COUCOU\n");
 	SDL_SetColorKey(character[0]->character[HAUT], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[HAUT]->format), 255, 255, 255));
 	SDL_SetColorKey(character[0]->character[DROITE], SDL_SRCCOLORKEY, SDL_MapRGB((character[0]->character[DROITE]->format), 255, 255, 255));
@@ -163,7 +163,7 @@ void jouer(SDL_Surface *screen, Character character[2]){
   m = 0;
   while((k < 300) && (m < 20)) {
     for(l=0; l < 15; l++) {
-      carte[l][m] = info[k];
+      carte[m][l] = info[k];
       k++;
     }
     m++;
@@ -191,6 +191,7 @@ void jouer(SDL_Surface *screen, Character character[2]){
     /*Gestion du déplacement, PdV et autres états du jeu */
     while(continuer)
     {
+			printf("COUCOU");
         SDL_WaitEvent(&event);
         switch(event.type)
         {

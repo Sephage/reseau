@@ -133,6 +133,7 @@ int main(){
 							/*Lecture des touches */
 							for(i = 0;i<actualNumberClient;i++){
 									if(FD_ISSET(client[i], &readfds)){
+											//printf("Un client est en train de parler\n");
 											bzero(buf,1);
 											if(read(client[i], buf, 1) == -1){
 												perror("Erreur lors de la lecture de la socket\n");
