@@ -234,6 +234,9 @@ void deplacer_personnage(int carte[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], int dire
             }
 
             break;
+		case BOMBE:
+			carte[personnage->position->x][personnage->position->y] = BOMBE;
+			break;
         /*case RESTER:
             if(carte[personnage->position->x][personnage->position->y] > 8){
                 vieClefOr[0]--;
