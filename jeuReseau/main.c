@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 /*	character[0]->life = 10;
 	character[0]->gold = 0;*/
     SDL_WM_SetCaption("Jeu version 1.0", NULL);
-    screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF| SDL_FULLSCREEN);
+    screen = SDL_SetVideoMode(LARGEUR,HAUTEUR,32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
     positionMenu.x = 0;
     positionMenu.y = 0;
@@ -219,7 +219,30 @@ void jouer(SDL_Surface *screen, Character character[2]){
                 }
             }
 		*/
-        afficher_carte(carte,screen, monstreActuel, character);
+
+      info = receiveFromServer(client);
+
+      m = 0;
+      while(k < 300) {
+        for(l=0; l < 15; l++) {
+          carte[l][m] = info[k];
+          k++;
+        }
+        m++;
+      }
+      character[0]->life = info[300];
+      character[0]->key = info[301];
+      character[0]->gold = info[302];
+      character[0]->position->x = info[303];
+      character[0]->position->y = info[304];
+
+      character[1]->life = info[305];
+      character[1]->key = info[306];
+      character[1]->gold = info[307];
+      character[1]->position->x = info[308];
+      character[1]->position->y = info[309];
+
+      afficher_carte(carte,screen, monstreActuel, character);
     }
 
   	deconnexionFromServer(&client);
