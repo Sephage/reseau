@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "constantes.h"
 #include "player.h"
 
 void display(int map[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR], Character character[2]){
+		system("clear");
 		int i,j;
 		for(i=0;i<NB_BLOCS_LARGEUR;i++){
 				for(j=0;j<NB_BLOCS_HAUTEUR;j++){

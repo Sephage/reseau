@@ -12,7 +12,7 @@
 void initGame(Character charac[2], int map[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR]){
 	int i=0, j=0, k=0;
 
-	initMap(map, "../map/niveau2.map");
+	initMap(map, "./map/niveau2.map");
 	
 	for(i = 0; i<NB_BLOCS_LARGEUR;i++){
 			for(j = 0;j<NB_BLOCS_HAUTEUR;j++){

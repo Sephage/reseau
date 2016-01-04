@@ -16,7 +16,6 @@ int main(){
 		}
 
 		while(continuer){
-				system("clear");
 				printf("-----------------------Menu----------------------\n");
 				printf("1- Se connecter à un serveur\n");
 				printf("2- Quitter\n");
@@ -53,14 +52,13 @@ void jouer(Character character[2]){
 		system("clear");
 		printf("\t\tWaiting for another client\t\t\n");
 
-		info = receiveFromServer(client);
-		convertInfo(info, character, map);
-
-		display(map, character);
 
 		continuer = 1;
 		while(continuer){
-				system("clear");
+				info = receiveFromServer(client);
+				convertInfo(info, character, map);
+				display(map, character);
+
 				printf("Rentrez une touche (Z Q S D, A pour les bombes)\n");
 				scanf("%c", &choix);
 				switch(choix){
@@ -88,10 +86,7 @@ void jouer(Character character[2]){
 								printf("ERROR : BAD INPUT\n");
 								break;
 				}
-			info = receiveFromServer(client);
-			convertInfo(info, character, map);
-			display(map, character);
-		}
+					}
 	deconnexionFromServer(&client);
 }
 
