@@ -7,13 +7,14 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-#include "../joueur.h"
 #include "../main.h"
+#include "server.h"
 
 int main(){
 		int s_ecoute, s_dial, cli_len;
 		int option = 1;
 		struct sockaddr_in serv_addr, cli_addr;
+		fd_set readfds;
 		/*buf contient le déplacement (compris entre 0 et 3)
 		 * map contient la map (qu'il faudra renvoyer à chaque changement
 		 * character contiendra les états des deux personnages, 0 sera le premier arrivé
@@ -108,7 +109,7 @@ int main(){
 											}
 											/*Traitement des touches que l'on recoit 
 											 * i=J1 ou J2 (prendre i+1) */
-											deplacer_personnage(map, buf[1], character[i]);
+											deplacer_personnage(map, buf[0], character[i]);
 									}
 							}
 					}
