@@ -162,7 +162,7 @@ int main(){
 												}
 												continuer = 0;
 											}
-											else {
+											else if(buf[0] == 0 || buf[0] == 1 || buf[0] == 2 || buf[0] == 3 || buf[0] == 18 || buf[0] == 5 || ){
 												move_character(map, buf[0], character[i]);
 												if(character[i]->life == 0 || character[i]->gold == 10) {
 
