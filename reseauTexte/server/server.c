@@ -216,6 +216,7 @@ int main(){
 														bufMapJoueur[0] = 30;
 														bufMapJoueur[1] = 35;
 														bufMapJoueur[3] = 0;
+														printf("L'un des deux joueurs s'est déconnecté, arrêt de la partie.");
 														if(i == 0) {
 															write(client[1],bufMapJoueur,310*sizeof(int));
 														}
@@ -237,7 +238,12 @@ int main(){
 					 * a gagné et mettre continuer à 0 */
 		}
 		close(client[1]);
+		printf("Deconnexion premier client");
 		close(client[2]);
+		printf("Deconnexion second client.");
 	}
 		close(s_ecoute);
+		printf("Deconnexion du serveur.");
+
+		return 0;
 }
