@@ -61,14 +61,14 @@ int jouer(Character character[2]){
 		continuer = 1;
 		verif = 1;
 		while(continuer){
-				info = receiveFromServer(client);
-				if(info == -1) {
-					printf("ConnexionLost");
+				
+				if((info = receiveFromServer(client)) == -1) {
+					printf("Connexion Lost\n");
 					deconnexionFromServer(&client);
 					continuer = 0;
 					return 0;
 				}
-				if(info[0] == 30 && info[1] = 35) {
+				if(info[0] == 30 && info[1] == 35) {
 					if(info[3] == 0) {
 						deconnexionFromServer(&client);
 						continuer = 0;
@@ -82,8 +82,8 @@ int jouer(Character character[2]){
 				}
 				else {
 					for(i = 0; i < 300; i++) {
-						if(!(info[k] < 9 || info[k] = 18)) {
-							printf("Invalid data received Map");
+						if(!(info[i] < 9 || info[i] == 18)) {
+							printf("Invalid data received Map\n");
 							verif = 0;
 						}
 					}
@@ -91,12 +91,12 @@ int jouer(Character character[2]){
 					info[305] > 10 || info[306] > 10 || info[307] > 10 ||
 				  info[303] > 19 || info[308] > 19 || info[304] > 14 || info[309] > 14 ||
 			    info[303] < 0 || info[308] < 0 || info[304] < 0 || info[309] < 0) {
-						printf(Invalid data received players);
+						printf("Invalid data received players\n");
 						verif = 0;
 					}
 
 					if(verif == 0) {
-						printf("Game finished because of trickery")
+						printf("Game finished because of trickery\n");
 						deconnexionFromServer(&client);
 						continuer = 0;
 						return 0;

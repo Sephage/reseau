@@ -91,6 +91,7 @@ int main(){
 			for(i=0;i<NB_BLOCS_LARGEUR;i++){
 				for(j=0;j<NB_BLOCS_HAUTEUR;j++){
 					bufMapJoueur[k] = map[i][j];
+					printf("buffer = %d \n",bufMapJoueur[k]);
 					k++;
 				}
 			}
@@ -99,7 +100,7 @@ int main(){
 		bufMapJoueur[301] = character[0]->key;
 		bufMapJoueur[302] = character[0]->gold;
 		bufMapJoueur[303] = character[0]->x;
-		bufMapJoueur[304] = character[0]->x;
+		bufMapJoueur[304] = character[0]->y;
 
 		bufMapJoueur[305] = character[1]->life;
 		bufMapJoueur[306] = character[1]->key;
