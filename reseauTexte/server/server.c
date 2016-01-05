@@ -55,6 +55,9 @@ int main(){
 		bind(s_ecoute, (struct sockaddr *)&serv_addr, sizeof serv_addr);
 		listen(s_ecoute, 5);
 
+		while(1) {
+
+			actualNumberClient = 0;
 		/*Premiere boucle afin de récupérer le bon nombre de joueur*/
 		while(actualNumberClient < 2){
 				FD_ZERO(&readfds);
@@ -127,19 +130,18 @@ int main(){
 				if(s_dial > descmax){
 						descmax = s_dial;
 				}
-				printf("Received client action, proceding...\n");
 					nb_client_aff = select(descmax + 1, &readfds, NULL, NULL, &compte_rebours);
 
 					/*Lorsque nb_client_aff > 0, un des descripteur surveillé a reçu quelque chose*/
 					if(nb_client_aff){
+							printf("Received client action, proceding...\n");
 							/*Lecture des touches */
 							for(i = 0;i<actualNumberClient;i++){
 									if(FD_ISSET(client[i], &readfds)){
 											//printf("Un client est en train de parler\n");
 											bzero(buf,1);
 											if(read(client[i], buf, 1) == -1){
-												perror("Erreur lors de la lecture de la socket\n");
-													return -1;
+												perror("Erreur lors de la lecture du socket, client déconnecté\n");
 											}
 											/*Traitement des touches que l'on recoit
 											 * i=J1 ou J2 (prendre i+1) */
@@ -236,5 +238,6 @@ int main(){
 		}
 		close(client[1]);
 		close(client[2]);
+	}
 		close(s_ecoute);
 }
