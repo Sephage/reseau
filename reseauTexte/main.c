@@ -23,7 +23,12 @@ int main(){
 				scanf("%d",&choix);
 					switch(choix){
 							case 1:
-									jouer(character);
+									if(jouer(character) == 1) {
+										printf("Fin de la partie, vous avez gagné !");
+									}
+									else {
+										printf("Fin de la partie, vous avez perdu !");
+									}
 									break;
 							case 2:
 									system("clear");
@@ -39,12 +44,12 @@ int main(){
 		return EXIT_SUCCESS;
 }
 
-void jouer(Character character[2]){
+int jouer(Character character[2]){
 		Client client;
 		int *info = malloc(BUFF_SIZE_RECV * sizeof(int));
 
 		int map[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR] = {0};
-		int continuer,i,j;
+		int continuer,i,j, verif;
 
 		char choix = '\0';
 
@@ -54,10 +59,53 @@ void jouer(Character character[2]){
 
 
 		continuer = 1;
+		verif = 1;
 		while(continuer){
 				info = receiveFromServer(client);
-				convertInfo(info, character, map);
-				display(map, character);
+				if(info == -1) {
+					printf("ConnexionLost");
+					deconnexionFromServer(&client);
+					continuer = 0;
+					return 0;
+				}
+				if(info[0] == 30 && info[1] = 35) {
+					if(info[3] == 0) {
+						deconnexionFromServer(&client);
+						continuer = 0;
+						return 1;
+					}
+					else if(info[3] == 1) {
+						deconnexionFromServer(&client);
+						continuer = 0;
+						return 0;
+					}
+				}
+				else {
+					for(i = 0; i < 300; i++) {
+						if(!(info[k] < 9 || info[k] = 18)) {
+							printf("Invalid data received Map");
+							verif = 0;
+						}
+					}
+					if(info[300] > 10 || info[301] > 10 || info[302] > 10 ||
+					info[305] > 10 || info[306] > 10 || info[307] > 10 ||
+				  info[303] > 19 || info[308] > 19 || info[304] > 14 || info[309] > 14 ||
+			    info[303] < 0 || info[308] < 0 || info[304] < 0 || info[309] < 0) {
+						printf(Invalid data received players);
+						verif = 0;
+					}
+
+					if(verif == 0) {
+						printf("Game finished because of trickery")
+						deconnexionFromServer(&client);
+						continuer = 0;
+						return 0;
+					}
+					else {
+						convertInfo(info, character, map);
+						display(map, character);
+					}
+				}
 
 				printf("Rentrez une touche (Z Q S D, A pour les bombes)\n");
 				scanf("%c", &choix);
@@ -82,12 +130,17 @@ void jouer(Character character[2]){
 						case 'a':
 								sendToServer(client, BOMBE);
 								break;
+						case 'P':
+						case 'p':
+							sendToServer(client, EXIT);
+							break;
 						default:
 								printf("ERROR : BAD INPUT\n");
 								break;
 				}
-					}
+			}
 	deconnexionFromServer(&client);
+	return 0;
 }
 
 void convertInfo(int *info, Character character[2], int map[NB_BLOCS_LARGEUR][NB_BLOCS_HAUTEUR]){
@@ -104,5 +157,7 @@ void convertInfo(int *info, Character character[2], int map[NB_BLOCS_LARGEUR][NB
 				character[i]->life = info[k++];
 				character[i]->key = info[k++];
 				character[i]->gold = info[k++];
+				character[i]->x = info[k++];
+				character[i]->y = info[k++];
 		}
 }
