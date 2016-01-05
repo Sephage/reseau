@@ -116,6 +116,8 @@ int main(){
 
 		/*Tant que l'un des joueurs n'a pas gagné ou perdu...*/
 		while(continuer){
+
+			printf("Waiting for client action\n");
 			FD_ZERO(&readfds);
 				FD_SET(s_ecoute, &readfds);
 				descmax = s_ecoute;
@@ -125,7 +127,7 @@ int main(){
 				if(s_dial > descmax){
 						descmax = s_dial;
 				}
-
+				printf("Received client action, proceding...\n");
 					nb_client_aff = select(descmax + 1, &readfds, NULL, NULL, &compte_rebours);
 
 					/*Lorsque nb_client_aff > 0, un des descripteur surveillé a reçu quelque chose*/
@@ -164,6 +166,7 @@ int main(){
 											}
 											else if(buf[0] == 0 || buf[0] == 1 || buf[0] == 2 || buf[0] == 3 || buf[0] == 18 || buf[0] == 5 || ){
 												move_character(map, buf[0], character[i]);
+
 												if(character[i]->life == 0 || character[i]->gold == 10) {
 
 													bufMapJoueur[0] = 30;

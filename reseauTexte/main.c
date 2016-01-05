@@ -59,9 +59,8 @@ int jouer(Character character[2]){
 
 
 		continuer = 1;
-		verif = 1;
 		while(continuer){
-				
+				verif = 1;
 				if((info = receiveFromServer(client)) == -1) {
 					printf("Connexion Lost\n");
 					deconnexionFromServer(&client);
@@ -102,42 +101,53 @@ int jouer(Character character[2]){
 						return 0;
 					}
 					else {
+						printf("Map info received, updating\n");
 						convertInfo(info, character, map);
 						display(map, character);
+						printf("Map info updated\n");
 					}
 				}
 
-				printf("Rentrez une touche (Z Q S D, A pour les bombes)\n");
+				printf("Rentrez une touche (Z Q S D, A pour les bombes, P pour quitter)\n");
 				scanf("%c", &choix);
 				switch(choix){
 						case 'z':
 						case 'Z':
 								sendToServer(client, HAUT);
+								printf("Action sent to server.\n");
 								break;
 						case 'S':
 						case 's':
 								sendToServer(client, BAS);
+								printf("Action sent to server.\n");
 								break;
 						case 'Q':
 						case 'q':
 								sendToServer(client, GAUCHE);
+								printf("Action sent to server.\n");
 								break;
 						case 'D':
 						case 'd':
 								sendToServer(client, DROITE);
+								printf("Action sent to server.\n");
 								break;
 						case 'A':
 						case 'a':
 								sendToServer(client, BOMBE);
+								printf("Action sent to server.\n");
 								break;
 						case 'P':
 						case 'p':
 							sendToServer(client, EXIT);
+							continuer = 0;
+							deconnexionFromServer(&client);
+							return 0;
 							break;
 						default:
 								printf("ERROR : BAD INPUT\n");
 								break;
 				}
+				printf("Waiting for new map.\n");
 			}
 	deconnexionFromServer(&client);
 	return 0;
