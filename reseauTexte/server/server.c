@@ -153,10 +153,11 @@ int main(){
 												bufMapJoueur[3] = 1;
 
 
-												for(j=0;j<2;j++){
-													if(j != i) {
-														write(client[j],bufMapJoueur,310*sizeof(int));
-													}
+												if(i == 0) {
+													write(client[1],bufMapJoueur,310*sizeof(int));
+												}
+												else {
+													write(client[0],bufMapJoueur,310*sizeof(int));
 												}
 												continuer = 0;
 											}
@@ -170,15 +171,13 @@ int main(){
 
 													write(client[i],bufMapJoueur,310*sizeof(int));
 
-													bufMapJoueur[0] = 35;
-													bufMapJoueur[1] = 30;
 													bufMapJoueur[3] = 1;
 
-
-													for(j=0;j<2;j++){
-														if(j != i) {
-															write(client[j],bufMapJoueur,310*sizeof(int));
-														}
+													if(i == 0) {
+														write(client[1],bufMapJoueur,310*sizeof(int));
+													}
+													else {
+														write(client[0],bufMapJoueur,310*sizeof(int));
 													}
 													continuer = 0;
 												}
@@ -196,7 +195,7 @@ int main(){
 													bufMapJoueur[301] = character[0]->key;
 													bufMapJoueur[302] = character[0]->gold;
 													bufMapJoueur[303] = character[0]->x;
-													bufMapJoueur[304] = character[0]->x;
+													bufMapJoueur[304] = character[0]->y;
 
 													bufMapJoueur[305] = character[1]->life;
 													bufMapJoueur[306] = character[1]->key;
@@ -207,7 +206,18 @@ int main(){
 
 												printf("Envoi des données en cours\n");
 												for(i=0;i<2;i++){
-													write(client[i],bufMapJoueur,310*sizeof(int));
+													if(write(client[i],bufMapJoueur,310*sizeof(int)) == -1) {
+														bufMapJoueur[0] = 30;
+														bufMapJoueur[1] = 35;
+														bufMapJoueur[3] = 0;
+														if(i == 0) {
+															write(client[1],bufMapJoueur,310*sizeof(int));
+														}
+														else {
+															write(client[0],bufMapJoueur,310*sizeof(int));
+														}
+														continuer = 0;
+													}
 												}
 												printf("Envoi des données fini\n");
 											}
@@ -220,4 +230,7 @@ int main(){
 					 * Ou renvoyer une indication de fin de jeu si l'un des personnages
 					 * a gagné et mettre continuer à 0 */
 		}
+		close(client[1]);
+		close(client[2]);
+		close(s_ecoute);
 }
