@@ -53,11 +53,11 @@ int main(){
 		setsockopt(s_ecoute, SOL_SOCKET, SO_REUSEADDR, &so_reuseaddr, sizeof so_reuseaddr);
 
 		bind(s_ecoute, (struct sockaddr *)&serv_addr, sizeof serv_addr);
-		listen(s_ecoute, 5);
 
 		while(1) {
+		listen(s_ecoute, 5);
 
-			actualNumberClient = 0;
+		actualNumberClient = 0;
 		/*Premiere boucle afin de récupérer le bon nombre de joueur*/
 		while(actualNumberClient < 2){
 				FD_ZERO(&readfds);
@@ -94,7 +94,6 @@ int main(){
 			for(i=0;i<NB_BLOCS_LARGEUR;i++){
 				for(j=0;j<NB_BLOCS_HAUTEUR;j++){
 					bufMapJoueur[k] = map[i][j];
-					printf("buffer = %d \n",bufMapJoueur[k]);
 					k++;
 				}
 			}
@@ -118,6 +117,7 @@ int main(){
 		printf("Envoi des données fini\n");
 
 		/*Tant que l'un des joueurs n'a pas gagné ou perdu...*/
+		continuer = 1;
 		while(continuer){
 
 			printf("Waiting for client action\n");
@@ -216,7 +216,7 @@ int main(){
 														bufMapJoueur[0] = 30;
 														bufMapJoueur[1] = 35;
 														bufMapJoueur[3] = 0;
-														printf("L'un des deux joueurs s'est déconnecté, arrêt de la partie.");
+														printf("L'un des deux joueurs s'est déconnecté, arrêt de la partie.\n");
 														if(i == 0) {
 															write(client[1],bufMapJoueur,310*sizeof(int));
 														}
@@ -237,13 +237,13 @@ int main(){
 					 * Ou renvoyer une indication de fin de jeu si l'un des personnages
 					 * a gagné et mettre continuer à 0 */
 		}
+		close(client[0]);
+		printf("Deconnexion premier client.\n");
 		close(client[1]);
-		printf("Deconnexion premier client");
-		close(client[2]);
-		printf("Deconnexion second client.");
+		printf("Deconnexion second client.\n");
 	}
 		close(s_ecoute);
-		printf("Deconnexion du serveur.");
+		printf("Deconnexion du serveur.\n");
 
 		return 0;
 }
